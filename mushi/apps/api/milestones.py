@@ -28,6 +28,7 @@ from mushi.core.utils.http import jsonify_list
 from mushi.core.utils.time import from_unix_timestamp
 
 from .exc import ApiError
+from .filters import parse_filters
 
 
 bp = Blueprint('milestones', __name__)
@@ -36,14 +37,16 @@ bp = Blueprint('milestones', __name__)
 @bp.route('/milestones/')
 @require_auth_token
 def list_milestones(auth_token):
-    limit = request.args.get('limit')
-    offset = request.args.get('offset')
-
     query = db_session.query(Milestone)
-    if limit is not None:
-        query = query.limit(limit)
-    if offset is not None:
-        query = query.offset(offset)
+
+    filters_string = request.args.get('filters')
+    if filters_string:
+        query = parse_filters(
+            query, Milestone, filters_string, [Milestone.name, Milestone.description])
+
+    limit = request.args.get('limit', 20)
+    offset = request.args.get('offset', 0)
+    query = query.limit(limit).offset(offset)
 
     rv = [m.to_dict(max_depth=2) for m in query]
     return jsonify_list(rv)
