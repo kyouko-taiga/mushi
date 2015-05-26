@@ -28,12 +28,12 @@ class Command():
     def __call__(self):
         parser = argparse.ArgumentParser(
             prog=self.argv[0],
-            description='Manage the Mushi webservice.')
+            description='Manage the Mushi server.')
         subparsers = parser.add_subparsers(dest='subcommand')
         subparsers.required = True
 
         # create a sub-parser for the run method
-        sub = subparsers.add_parser('run', help='run the webservice')
+        sub = subparsers.add_parser('run', help='run the server')
         sub.add_argument('-p', '--port', dest='port', action='store', type=int, default=5000,
             help='specify the listening port (default: 5000)')
         sub.add_argument('-o', '--host', dest='host', action='store', default='localhost',
