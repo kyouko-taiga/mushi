@@ -217,7 +217,7 @@ class Issue(Base, Tagged, Dictionarizable):
 
         # Update the optional milestone the issue is to be assigned to.
         if 'milestone' in data:
-            if data['milestone'] != '':
+            if data['milestone']:
                 milestone_slug = data.pop('milestone')
                 try:
                     self.milestone = db_session.query(Milestone).filter(
@@ -225,7 +225,7 @@ class Issue(Base, Tagged, Dictionarizable):
                     ).one()
                 except NoResultFound:
                     raise InvalidArgumentError("No such milestone: '%s'." % milestone_slug)
-            else:
+            elif self.milestone:
                 self.milestone.issues.remove(self)
                 del data['milestone']
 
