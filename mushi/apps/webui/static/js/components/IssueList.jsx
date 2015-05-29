@@ -42,7 +42,7 @@ var IssueList = React.createClass({
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(new_milestone),
             success: function(response) {
-                this.state.data.push(response);
+                this.state.data.unshift(response);
                 this.setState(this.state);
             }.bind(this)
         });
