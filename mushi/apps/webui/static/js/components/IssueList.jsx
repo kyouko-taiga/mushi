@@ -87,7 +87,7 @@ var IssueListFilter = React.createClass({
 });
 
 var IssueList = React.createClass({
-    loadMilestones: function() {
+    loadIssues: function() {
         mushi.api.get(this.props.endpoint, {
             dataType: 'json',
             data: {
@@ -112,14 +112,13 @@ var IssueList = React.createClass({
     },
 
     componentDidMount: function() {
-        this.loadMilestones();
-        setInterval(this.loadMilestones, this.props.poll_interval);
-        $(document.body).on('keydown', this.handleKeyDown);
+        this.loadIssues();
+        setInterval(this.loadIssues, this.props.poll_interval);
     },
 
     handleFiltersChange: function(filters_value) {
         this.state.filters = filters_value;
-        this.loadMilestones();
+        this.loadIssues();
     },
 
     handleCreate: function(new_milestone) {

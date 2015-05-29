@@ -46,7 +46,7 @@ def list_milestones(auth_token):
 
     limit = request.args.get('limit', 20)
     offset = request.args.get('offset', 0)
-    query = query.limit(limit).offset(offset)
+    query = query.order_by(Milestone.due_date).limit(limit).offset(offset)
 
     rv = [m.to_dict(max_depth=2) for m in query]
     return jsonify_list(rv)
