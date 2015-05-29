@@ -89,7 +89,7 @@
 
         // Delete a particular cookie from its name.
         cookies.delete = function(cookie_name) {
-            mushi.set_cookie(cookie_name, undefined, 1)
+            mushi.cookies.set(cookie_name, undefined, 1)
         };
 
     }(mushi.cookies = mushi.cookies || {}));

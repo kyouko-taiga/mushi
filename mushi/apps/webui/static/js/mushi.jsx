@@ -148,7 +148,8 @@
             'milestones'       : 'milestones',
             'milestones/:slug' : 'milestone_detail',
             'issues'           : 'issues',
-            'issues/:uid'      : 'issue_detail'
+            'issues/:uid'      : 'issue_detail',
+            'logout'           : 'logout'
         },
         dashboard: function() {
             this.current = 'dashboard';
@@ -167,6 +168,14 @@
             this.current = 'issue_detail';
             this.args = {'uid': uid};
         },
+        logout: function() {
+            mushi.api.delete('tokens/' + mushi.cookies.get('Auth-Token'), {
+                success: function() {
+                    mushi.cookies.delete('Auth-Token');
+                    window.location = '/login';
+                }
+            });
+        }
     });
  
     var router = new Router();
@@ -192,17 +201,6 @@
             e.preventDefault();
             Backbone.history.navigate(href.attr, true);
         }
-    });
-
-    $('#logout').click(function(e) {
-        e.preventDefault();
-
-        mushi.api.delete('tokens/' + mushi.cookies.get('Auth-Token'), {
-            success: function() {
-                mushi.cookies.delete('Auth-Token');
-                window.location.replace('/');   
-            }
-        });
     });
 
 }(window.mushi = window.mushi || {}, jQuery));
