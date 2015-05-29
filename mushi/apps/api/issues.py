@@ -22,6 +22,7 @@ from mushi.core.auth import require_auth_token
 from mushi.core.db import db_session
 from mushi.core.db.models import Issue
 from mushi.core.utils.http import jsonify_list
+from mushi.core.utils.time import utcnow
 
 from .exc import ApiError
 from .filters import parse_filters
@@ -54,6 +55,7 @@ def create_issue(auth_token):
         post_data = request.get_json(force=True)
     except BadRequest as e:
         raise ApiError(e.description)
+    post_data['author'] = auth_token.owner.email
 
     new_issue = Issue()
     new_issue.update(post_data)
@@ -87,6 +89,13 @@ def update_issue(auth_token, uid):
         post_data = request.get_json(force=True)
     except BadRequest as e:
         raise ApiError(e.description)
+
+    # Update the closing time if the status of the issue gets updated.
+    if ('status' in post_data) and post_data['status'] != issue.status:
+        if post_data['status'] == 'closed':
+            post_data['closed_at'] = utcnow()
+        else:
+            post_data['closed_at'] = None
 
     issue.update(post_data)
 

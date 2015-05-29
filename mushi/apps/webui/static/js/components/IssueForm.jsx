@@ -84,6 +84,26 @@ var IssueLevelInput = React.createClass({
     }
 });
 
+var IssueStatuslInput = React.createClass({
+    mixins: [IssueInputMixin],
+
+    validate: function(value) {
+        return true;
+    },
+
+    render: function() {
+        return (
+        <Input
+          {...this.props} type="select" label="Status"
+          bsStyle={this.state.bsStyle} value={this.state.value} onChange={this.handleChange}
+        >
+          <option value="open">Open</option>
+          <option value="closed">Closed</option>
+        </Input>
+        );
+    }
+});
+
 var IssueDescriptionInput = React.createClass({
     mixins: [IssueInputMixin],
 
@@ -218,6 +238,7 @@ var IssueFormModal = React.createClass({
             <div className="modal-body">
               <IssueLabelInput ref="label" value={this.props.label} required />
               <IssueLevelInput ref="level" value={this.props.level || 'important'} required />
+              <IssueStatuslInput ref="status" value={this.props.status || 'open'} required />
               <IssueDescriptionInput ref="description" value={this.props.description} />
               <IssueReproducibleInput ref="reproducible" checked={this.props.reproducible} />
               <IssueMilestoneInput ref="milestone" endpoint='milestones/' value={milestone_slug} />

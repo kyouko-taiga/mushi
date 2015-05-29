@@ -83,7 +83,7 @@ var IssueListItem = React.createClass({
 
         var author = (function(author) {
             if (author) {
-                return <span>by <a href={'#authors' + author.email}>author.name</a></span>;
+                return <span>by <a href={'#authors' + author.email}>{author.name}</a></span>;
             } else {
                 return <span />;
             }

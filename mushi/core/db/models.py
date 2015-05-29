@@ -72,7 +72,7 @@ class Token(Base, Dictionarizable):
     expires_at = Column(UtcDateTime, default=utcnow)
 
     owner_email = Column(String, ForeignKey('user.email'), nullable=False)
-    owner = relationship("User", backref="tokens")
+    owner = relationship('User', backref='tokens')
 
     @hybrid_property
     def has_expired(self):
@@ -185,10 +185,10 @@ class Issue(Base, Tagged, Dictionarizable):
     reproducible = Column(Boolean, nullable=False, default=False)
 
     author_email = Column(String, ForeignKey('user.email'))
-    author = relationship("User", backref="issues")
+    author = relationship('User', backref='issue')
 
     milestone_slug = Column(String, ForeignKey('milestone.slug'))
-    milestone = relationship("Milestone", backref="issues")
+    milestone = relationship('Milestone', backref='issues')
 
     tags = relationship(
         'Tag',
@@ -215,7 +215,20 @@ class Issue(Base, Tagged, Dictionarizable):
         # Update tags.
         self.update_tags(data)
 
-        # Update the optional milestone the issue is to be assigned to.
+        # Update the author of the issue.
+        if 'author' in data:
+            if data['author']:
+                author_email = data.pop('author')
+                try:
+                    self.author = db_session.query(User).filter(
+                        User.email == author_email
+                    ).one()
+                except NoResultFound:
+                    raise InvalidArgumentError("No such user: '%s'." % author_email)
+            elif self.author:
+                self.author = None
+
+        # Update the milestone the issue is to be assigned to.
         if 'milestone' in data:
             if data['milestone']:
                 milestone_slug = data.pop('milestone')

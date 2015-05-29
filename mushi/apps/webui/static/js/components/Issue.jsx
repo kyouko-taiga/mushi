@@ -102,7 +102,7 @@ var Issue = React.createClass({
 
         var author = (function(author) {
             if (author) {
-                return <a href={'#authors' + author.email}>author.name</a>;
+                return <a href={'#authors' + author.email}>{author.name}</a>;
             } else {
                 return '-';
             }
@@ -134,7 +134,7 @@ var Issue = React.createClass({
                   <ModalTrigger modal={<IssueDeleteModal handleDelete={this.handleDelete} title="Are you sure?" />}>
                     <Button bsStyle='danger'><i className="fa fa-times"></i> Delete</Button>
                   </ModalTrigger>
-                  <ModalTrigger modal={<IssueFormModal {...this.state} onModalSubmit={this.handleUpdate} title={'Edit" '  + this.state.name + '"'} submitText="Save" submitStyle="success" />}>
+                  <ModalTrigger modal={<IssueFormModal {...this.state} onModalSubmit={this.handleUpdate} title={'Edit issue #'  + this.state.uid} submitText="Save" submitStyle="success" />}>
                     <Button bsStyle='warning'><i className="fa fa-pencil"></i> Edit</Button>
                   </ModalTrigger>
                 </div>
