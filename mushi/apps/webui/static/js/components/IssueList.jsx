@@ -13,13 +13,88 @@
  * limitations under the License.
  */
 
-var ModalTrigger = ReactBootstrap.ModalTrigger;
 var Button = ReactBootstrap.Button;
+var ModalTrigger = ReactBootstrap.ModalTrigger;
+
+var IssueListFilterItem = React.createClass({
+    handleClick: function(e) {
+        e.preventDefault();
+        this.props.onSelect(this.props.value);
+    },
+
+    render: function() {
+        return <li><a onClick={this.handleClick} href="#">{this.props.label}</a></li>;
+    }
+});
+
+var IssueListFilter = React.createClass({
+    getInitialState: function() {
+        return {
+            value: this.props.value,
+        };
+    },
+
+    componentDidMount: function() {
+        $(document.body).on('keydown', this.handleKeyDown);
+    },
+
+    componentWillUnMount: function() {
+        $(document.body).off('keydown', this.handleKeyDown);
+    },
+
+    handleDropdown: function(value) {
+        this.setState(
+            {value: value},
+            function() {
+                this.props.onFiltersChange(value);
+            }
+        );
+    },
+
+    handleChange: function(e) {
+        this.setState({value: e.target.value});
+    },
+
+    handleKeyDown: function(e) {
+        if (e.keyCode == 13) {
+            this.props.onFiltersChange(this.state.value);
+        }
+    },
+
+    render: function() {
+        return (
+        <div className="input-group">
+          <div className="input-group-btn">
+            <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+              <i className="fa fa-search"></i> <span className="caret"></span>
+            </button>
+            <ul className="dropdown-menu" role="menu">
+              <IssueListFilterItem onSelect={this.handleDropdown} value="status:open" label="Open" />
+              <IssueListFilterItem onSelect={this.handleDropdown} value="status:closed" label="Closed" />
+              <li className="divider"></li>
+              <IssueListFilterItem onSelect={this.handleDropdown} value="level:critical" label="Critical" />
+              <IssueListFilterItem onSelect={this.handleDropdown} value="level:important" label="Important" />
+              <IssueListFilterItem onSelect={this.handleDropdown} value="level:minor" label="Minor" />
+            </ul>
+          </div>
+          <input
+            type="search" className="form-control" aria-label="Filter results"
+            placeholder="Filter results" value={this.state.value} onChange={this.handleChange}
+          />
+        </div>
+        );
+    }
+});
 
 var IssueList = React.createClass({
     loadMilestones: function() {
         mushi.api.get(this.props.endpoint, {
             dataType: 'json',
+            data: {
+                filters: this.state.filters,
+                limit: this.state.limit,
+                offset: this.state.offset
+            },
             cache: false,
             success: function(data) {
                 this.setState({data: data});
@@ -28,12 +103,23 @@ var IssueList = React.createClass({
     },
 
     getInitialState: function() {
-        return {data: []};
+        return {
+            data: [],
+            filters: 'status:open',
+            limit: 5,
+            offset: 0
+        };
     },
 
     componentDidMount: function() {
         this.loadMilestones();
         setInterval(this.loadMilestones, this.props.poll_interval);
+        $(document.body).on('keydown', this.handleKeyDown);
+    },
+
+    handleFiltersChange: function(filters_value) {
+        this.state.filters = filters_value;
+        this.loadMilestones();
     },
 
     handleCreate: function(new_milestone) {
@@ -59,7 +145,7 @@ var IssueList = React.createClass({
             } else {
                 return (
                 <div className="alert alert-info" role="alert">
-                  <i className="fa fa-info-circle"></i> {"You don't have any open issue."}
+                  <i className="fa fa-info-circle"></i> {"There are no issues matching the criteria."}
                 </div>
                 );
             }
@@ -74,22 +160,7 @@ var IssueList = React.createClass({
               </div>
               <div className="pull-right">
                 <span className="mu-filter-wrapper">
-                  <div className="input-group">
-                    <div className="input-group-btn">
-                      <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <i className="fa fa-search"></i> <span className="caret"></span>
-                      </button>
-                      <ul className="dropdown-menu" role="menu">
-                        <li><a href="#">Open</a></li>
-                        <li><a href="#">Closed</a></li>
-                        <li className="divider"></li>
-                        <li><a href="#">Critical</a></li>
-                        <li><a href="#">Important</a></li>
-                        <li><a href="#">Minor</a></li>
-                      </ul>
-                    </div>
-                    <input type="search" className="form-control" aria-label="Filter results" placeholder="Filter results" />
-                  </div>
+                  <IssueListFilter value={this.state.filters} onFiltersChange={this.handleFiltersChange} />
                 </span>
                 <span className="mu-button-wrapper">
                   <ModalTrigger modal={<IssueFormModal onModalSubmit={this.handleCreate} title="Create a new issue" submitText="Create" submitStyle="success" />}>
