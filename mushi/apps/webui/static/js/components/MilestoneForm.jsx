@@ -80,10 +80,11 @@ var MilestoneDueDateInput = React.createClass({
     mixins: [MilestoneInputMixin],
 
     validate: function(value) {
+        console.log(value);
         if (!value) {
             this.state.is_valid = true;
         } else {
-            var m = moment(value, 'DD/MM/YYYY');
+            var m = moment(value, 'YYYY-MM-DD');
             this.state.is_valid = m.isValid();
         }
         this.state.bsStyle = this.state.is_valid ? null : 'error';
@@ -100,7 +101,7 @@ var MilestoneDueDateInput = React.createClass({
         return (
         <Input
           {...this.props} type="date" label="Due data (optional)"
-          placeholder="dd/mm/yyyy (Ex: 26/05/2015)"
+          placeholder="yyyy-mm-dd (Ex: 2015-05-26)"
           bsStyle={this.state.bsStyle} value={this.state.value}
           onChange={this.handleChange} onBlur={this.handleBlur}
         />
@@ -133,7 +134,7 @@ var MilestoneFormModal = React.createClass({
 
         // Convert the "due date" string to a unix timestamp (if set).
         if (data.due_date) {
-            data.due_date = Math.round(moment(data.due_date, 'DD/MM/YYYY') / 1000);
+            data.due_date = Math.round(moment(data.due_date, 'YYYY-MM-DD') / 1000);
         } else {
             delete data.due_date;
         }
@@ -163,7 +164,7 @@ var MilestoneFormModal = React.createClass({
         var due_date = this.props.due_date;
         if (due_date) {
             var m = moment(due_date * 1000);
-            due_date = m.format('DD/MM/YYYY');
+            due_date = m.format('YYYY-MM-DD');
         }
 
         return (
