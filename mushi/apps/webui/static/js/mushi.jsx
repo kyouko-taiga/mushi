@@ -72,6 +72,7 @@
                 current={this.props.router.args.slug}
               />
               <Milestone endpoint={'milestones/' + this.props.router.args.slug} />
+              <IssueList endpoint={'milestones/' + this.props.router.args.slug + '/issues/'} poll_interval='60000' hideMilestone />
             </div>
             );
         }

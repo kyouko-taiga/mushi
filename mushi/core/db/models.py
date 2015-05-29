@@ -185,10 +185,10 @@ class Issue(Base, Tagged, Dictionarizable):
     reproducible = Column(Boolean, nullable=False, default=False)
 
     author_email = Column(String, ForeignKey('user.email'))
-    author = relationship('User', backref='issue')
+    author = relationship('User', backref=backref('issue', lazy='dynamic'))
 
     milestone_slug = Column(String, ForeignKey('milestone.slug'))
-    milestone = relationship('Milestone', backref='issues')
+    milestone = relationship('Milestone', backref=backref('issues', lazy='dynamic'))
 
     tags = relationship(
         'Tag',

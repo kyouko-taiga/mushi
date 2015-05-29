@@ -34,18 +34,24 @@ bp = Blueprint('issues', __name__)
 @bp.route('/issues/')
 @require_auth_token
 def list_issues(auth_token):
-    query = db_session.query(Issue)
-
-    filters_string = request.args.get('filters')
-    if filters_string:
-        query = parse_filters(query, Issue, filters_string, [Issue.label, Issue.description])
-
-    limit = request.args.get('limit', 20)
-    offset = request.args.get('offset', 0)
-    query = query.order_by(Issue.open_at.desc()).limit(limit).offset(offset)
+    query = make_issue_list_query()
 
     rv = [m.to_dict(max_depth=2) for m in query]
     return jsonify_list(rv)
+
+
+def make_issue_list_query(query_base=None):
+    rv = query_base or db_session.query(Issue)
+
+    filters_string = request.args.get('filters')
+    if filters_string:
+        rv = parse_filters(rv, Issue, filters_string, [Issue.label, Issue.description])
+
+    limit = request.args.get('limit', 20)
+    offset = request.args.get('offset', 0)
+    rv = rv.order_by(Issue.open_at.desc()).limit(limit).offset(offset)
+
+    return rv
 
 
 @bp.route('/issues/', methods=['POST'])

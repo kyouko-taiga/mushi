@@ -224,13 +224,22 @@ var IssueFormModal = React.createClass({
     },
 
     render: function() {
-        var milestone_slug = (function(milestone) {
-            if (milestone) {
-                return milestone.slug;
-            } else {
-                return null;
-            }
-        })(this.props.milestone);
+        console.log(this.props.hideMilestone);
+        if (this.props.hideMilestone) {
+            var milestone_input = <span />;
+        } else {
+            var milestone_slug = (function(milestone) {
+                if (milestone) {
+                    return milestone.slug;
+                } else {
+                    return null;
+                }
+            })(this.props.milestone);
+
+            var milestone_input = (
+            <IssueMilestoneInput ref="milestone" endpoint='milestones/' value={milestone_slug} />
+            );
+        }
 
         return (
         <Modal {...this.props}>
@@ -241,7 +250,7 @@ var IssueFormModal = React.createClass({
               <IssueStatuslInput ref="status" value={this.props.status || 'open'} required />
               <IssueDescriptionInput ref="description" value={this.props.description} />
               <IssueReproducibleInput ref="reproducible" checked={this.props.reproducible} />
-              <IssueMilestoneInput ref="milestone" endpoint='milestones/' value={milestone_slug} />
+              {milestone_input}
             </div>
             <div className="modal-footer">
               <Button onClick={this.props.onRequestHide}>Cancel</Button>

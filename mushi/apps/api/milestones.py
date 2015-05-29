@@ -23,12 +23,13 @@ from werkzeug.exceptions import BadRequest
 
 from mushi.core.auth import require_auth_token
 from mushi.core.db import db_session
-from mushi.core.db.models import Milestone
+from mushi.core.db.models import Issue, Milestone
 from mushi.core.utils.http import jsonify_list
 from mushi.core.utils.time import from_unix_timestamp
 
 from .exc import ApiError
 from .filters import parse_filters
+from .issues import make_issue_list_query
 
 
 bp = Blueprint('milestones', __name__)
@@ -115,3 +116,40 @@ def delete_milestone(auth_token, slug):
     db_session.commit()
 
     return '', 204
+
+
+@bp.route('/milestones/<slug>/issues/')
+@require_auth_token
+def list_issues(auth_token, slug):
+    try:
+        milestone = db_session.query(Milestone).filter(Milestone.slug == slug).one()
+    except NoResultFound:
+        abort(404)
+
+    query = make_issue_list_query(milestone.issues)
+
+    rv = [m.to_dict(max_depth=2) for m in query]
+    return jsonify_list(rv)
+
+
+@bp.route('/milestones/<slug>/issues/', methods=['POST'])
+@require_auth_token
+def create_issue(auth_token, slug):
+    try:
+        milestone = db_session.query(Milestone).filter(Milestone.slug == slug).one()
+    except NoResultFound:
+        abort(404)
+
+    try:
+        post_data = request.get_json(force=True)
+    except BadRequest as e:
+        raise ApiError(e.description)
+    post_data['author'] = auth_token.owner.email
+
+    new_issue = Issue()
+    new_issue.update(post_data)
+
+    milestone.issues.append(new_issue)
+    db_session.commit()
+
+    return jsonify(new_issue.to_dict(max_depth=2))

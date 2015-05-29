@@ -162,7 +162,7 @@ var IssueList = React.createClass({
                   <IssueListFilter value={this.state.filters} onFiltersChange={this.handleFiltersChange} />
                 </span>
                 <span className="mu-button-wrapper">
-                  <ModalTrigger modal={<IssueFormModal onModalSubmit={this.handleCreate} title="Create a new issue" submitText="Create" submitStyle="success" />}>
+                  <ModalTrigger modal={<IssueFormModal onModalSubmit={this.handleCreate} title="Create a new issue" submitText="Create" submitStyle="success" hideMilestone={this.props.hideMilestone} />}>
                     <Button bsStyle='success'><i className="fa fa-plus"></i></Button>
                   </ModalTrigger>
                 </span>
