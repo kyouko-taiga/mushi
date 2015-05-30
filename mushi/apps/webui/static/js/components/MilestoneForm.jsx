@@ -80,7 +80,6 @@ var MilestoneDueDateInput = React.createClass({
     mixins: [MilestoneInputMixin],
 
     validate: function(value) {
-        console.log(value);
         if (!value) {
             this.state.is_valid = true;
         } else {

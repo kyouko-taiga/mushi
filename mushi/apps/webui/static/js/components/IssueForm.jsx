@@ -224,7 +224,6 @@ var IssueFormModal = React.createClass({
     },
 
     render: function() {
-        console.log(this.props.hideMilestone);
         if (this.props.hideMilestone) {
             var milestone_input = <span />;
         } else {
