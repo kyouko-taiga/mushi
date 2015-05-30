@@ -174,9 +174,9 @@ var IssueMilestoneInput = React.createClass({
     },
 
     render: function() {
-        var options = [<option value="">No milestone</option>].concat(
+        var options = [<option value="" key="no-milestone">No milestone</option>].concat(
             this.state.milestones.map(function(item) {
-                return <option value={item.slug}>{item.name}</option>;
+                return <option value={item.slug} key={item.slug}>{item.name}</option>;
             })
         );
 
