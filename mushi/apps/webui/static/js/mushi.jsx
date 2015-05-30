@@ -18,12 +18,12 @@
     var BreadcrumbComponent = React.createClass({
         render: function() {
             var entries = this.props.hierarchy.map(function(entry) {
-                return <li><a href={entry.endpoint}>{entry.label}</a></li>;
+                return <li key={entry.endpoint}><a href={entry.endpoint}>{entry.label}</a></li>;
             });
-            entries.push(<li className="active">{this.props.current}</li>)
+            entries.push(<li className="active" key="active">{this.props.current}</li>)
 
             return (
-            <div id="mu-breadcrumb" class="row">
+            <div id="mu-breadcrumb" className="row">
               <div className="col-md-12">
                 <ol className="breadcrumb">
                   {entries}
