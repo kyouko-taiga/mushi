@@ -38,7 +38,7 @@ var IssueListFilter = React.createClass({
         $(document.body).on('keydown', this.handleKeyDown);
     },
 
-    componentWillUnMount: function() {
+    componentWillUnmount: function() {
         $(document.body).off('keydown', this.handleKeyDown);
     },
 
@@ -87,6 +87,8 @@ var IssueListFilter = React.createClass({
 });
 
 var IssueList = React.createClass({
+    mixins: [SetIntervalMixin],
+
     loadIssues: function() {
         mushi.api.get(this.props.endpoint, {
             dataType: 'json',
@@ -113,7 +115,7 @@ var IssueList = React.createClass({
 
     componentDidMount: function() {
         this.loadIssues();
-        setInterval(this.loadIssues, this.props.poll_interval);
+        this.setInterval(this.loadIssues, this.props.poll_interval);
     },
 
     handleFiltersChange: function(filters_value) {

@@ -38,7 +38,7 @@ var MilestoneListFilter = React.createClass({
         $(document.body).on('keydown', this.handleKeyDown);
     },
 
-    componentWillUnMount: function() {
+    componentWillUnmount: function() {
         $(document.body).off('keydown', this.handleKeyDown);
     },
 
@@ -83,6 +83,8 @@ var MilestoneListFilter = React.createClass({
 });
 
 var MilestoneList = React.createClass({
+    mixins: [SetIntervalMixin],
+
     loadMilestones: function() {
         mushi.api.get(this.props.endpoint, {
             dataType: 'json',
@@ -109,7 +111,7 @@ var MilestoneList = React.createClass({
 
     componentDidMount: function() {
         this.loadMilestones();
-        setInterval(this.loadMilestones, this.props.poll_interval);
+        this.setInterval(this.loadMilestones, this.props.poll_interval);
     },
 
     handleFiltersChange: function(filters_value) {
