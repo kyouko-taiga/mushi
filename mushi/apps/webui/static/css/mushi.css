@@ -142,6 +142,10 @@ body > .navbar + .container {
     border: 1px solid #ddd
 }
 
+.nav-tabs {
+    margin-bottom: 15px;
+}
+
 .mu-component > .panel > .panel-heading h2 {
     font-size: 24px;
     line-height: 34px;
@@ -293,4 +297,10 @@ body > .navbar + .container {
 
 .mu-issue-meta .dl-horizontal dd {
     margin-left: 0;
+}
+
+.mu-profile-picture {
+    border-radius: 6px;
+    width: 70px;
+    height: 70px;
 }

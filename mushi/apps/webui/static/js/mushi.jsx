@@ -109,6 +109,20 @@
         }
     });
 
+    var SettingsComponent = React.createClass({
+        render: function() {
+            return (
+            <div>
+              <BreadcrumbComponent
+                hierarchy={[{endpoint: '#', label: 'Dashboard'}]}
+                current="Settings"
+              />
+              <Settings />
+            </div>
+            );
+        }
+    });
+
     var InterfaceComponent = React.createClass({
         componentWillMount : function() {
             this.callback = (function() {
@@ -138,6 +152,9 @@
             if (this.props.router.current == 'issue_detail') {
                 return <IssueDetailComponent router={router} />;
             }
+            if (this.props.router.current == 'settings') {
+                return <SettingsComponent router={router} />;
+            }
             return <div />;
         }
     })
@@ -149,6 +166,7 @@
             'milestones/:slug' : 'milestone_detail',
             'issues'           : 'issues',
             'issues/:uid'      : 'issue_detail',
+            'settings'         : 'settings',
             'logout'           : 'logout'
         },
         dashboard: function() {
@@ -167,6 +185,9 @@
         issue_detail: function(uid) {
             this.current = 'issue_detail';
             this.args = {'uid': uid};
+        },
+        settings: function() {
+            this.current = 'settings';
         },
         logout: function() {
             mushi.api.delete('tokens/' + mushi.cookies.get('Auth-Token'), {

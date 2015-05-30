@@ -47,7 +47,13 @@ def list_user(auth_token):
 @bp.route('/users/', methods=['POST'])
 @require_auth_token
 def create_user(auth_token):
-    post_data = request.get_json(force=True)
+    try:
+        post_data = request.get_json(force=True)
+    except BadRequest as e:
+        raise ApiError(e.description)
+
+    if not post_data.get('password', False):
+        raise ApiError('Missing or empty password.')
     post_data['password'] = md5(post_data['password'].encode()).hexdigest()
 
     new_user = User()
@@ -84,8 +90,16 @@ def update_user(auth_token, email):
         except NoResultFound:
             abort(404)
 
-    post_data = request.get_json(force=True)
-    post_data['password'] = md5(post_data['password'].encode()).hexdigest()
+    try:
+        post_data = request.get_json(force=True)
+    except BadRequest as e:
+        raise ApiError(e.description)
+
+    if 'password' in post_data:
+        if not post_data['password']:
+            raise ApiError('Empty password.')
+        post_data['password'] = md5(post_data['password'].encode()).hexdigest()
+
     user.update(post_data)
 
     db_session.commit()
