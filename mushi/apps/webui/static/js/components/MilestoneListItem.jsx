@@ -42,7 +42,7 @@ var MilestoneListItem = React.createClass({
             <div className="row">
               <div className="mu-milestone-title col-sm-6">
                 <div className="mu-milestone-name">
-                  <a href={'#milestones/' + this.props.slug}>{this.props.name}</a>
+                  <a className="mu-app-link" href={'#milestones/' + this.props.slug}>{this.props.name}</a>
                 </div>
                 <div className="mu-milestone-meta">
                   {due_date_item()}

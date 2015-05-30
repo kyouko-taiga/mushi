@@ -193,7 +193,7 @@
     // See http://stackoverflow.com/questions/12081894.
     Backbone.history.start({ pushState: false, root: '/' });
 
-    $(document).on("click", "a:not([data-bypass])", function(e) {
+    $(document).on("click", "a.mu-app-link:not([data-bypass])", function(e) {
         var href = { prop: $(this).prop("href"), attr: $(this).attr("href") };
         var root = location.protocol + "//" + location.host + '/';
 

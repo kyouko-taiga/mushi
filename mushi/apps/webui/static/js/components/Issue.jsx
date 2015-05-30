@@ -94,7 +94,7 @@ var Issue = React.createClass({
 
         var milestone = (function(milestone) {
             if (milestone) {
-                return <a href={'#milestones/' + milestone.slug}>{milestone.name}</a>;
+                return <a className="mu-app-link" href={'#milestones/' + milestone.slug}>{milestone.name}</a>;
             } else {
                 return '-';
             }
@@ -102,7 +102,7 @@ var Issue = React.createClass({
 
         var author = (function(author) {
             if (author) {
-                return <a href={'#authors' + author.email}>{author.name}</a>;
+                return <a className="mu-app-link" href={'#authors' + author.email}>{author.name}</a>;
             } else {
                 return '-';
             }

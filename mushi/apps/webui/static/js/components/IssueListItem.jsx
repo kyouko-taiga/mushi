@@ -73,7 +73,7 @@ var IssueListItem = React.createClass({
             if (milestone) {
                 return (
                 <span className="mu-issue-meta-item">
-                  in <a href={'#milestones/' + milestone.slug}>{milestone.name}</a>
+                  in <a className="mu-app-link" href={'#milestones/' + milestone.slug}>{milestone.name}</a>
                 </span>  
                 );
             } else {
@@ -83,7 +83,7 @@ var IssueListItem = React.createClass({
 
         var author = (function(author) {
             if (author) {
-                return <span>by <a href={'#authors' + author.email}>{author.name}</a></span>;
+                return <span>by <a className="mu-app-link" href={'#authors' + author.email}>{author.name}</a></span>;
             } else {
                 return <span />;
             }
@@ -95,7 +95,7 @@ var IssueListItem = React.createClass({
 
         var tags = (function(tags) {
             var items = tags.map(function(item) {
-                return <a href={'#tags/' + item.name}>{item.name}</a>;
+                return <a className="mu-app-link" href={'#tags/' + item.name}>{item.name}</a>;
             });
 
             if (items.length > 0) {
@@ -122,7 +122,7 @@ var IssueListItem = React.createClass({
           <div className="mu-issue-status">{issue_icon}</div>
           <div className="mu-issue-description">
             <div className="mu-issue-label">
-              {level_label} <a href={'#issues/' + this.state.uid}>{this.state.label}</a>
+              {level_label} <a className="mu-app-link" href={'#issues/' + this.state.uid}>{this.state.label}</a>
             </div>
             <div className="mu-issue-meta">
               <div className="mu-issue-meta-item">

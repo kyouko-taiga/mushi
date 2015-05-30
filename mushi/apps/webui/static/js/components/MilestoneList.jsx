@@ -23,7 +23,7 @@ var MilestoneListFilterItem = React.createClass({
     },
 
     render: function() {
-        return <li><a onClick={this.handleClick} href="#">{this.props.label}</a></li>;
+        return <li><a href="#" onClick={this.handleClick}>{this.props.label}</a></li>;
     }
 });
 
