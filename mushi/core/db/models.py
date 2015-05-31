@@ -139,11 +139,11 @@ class Milestone(Base, Tagged, Dictionarizable):
 
     @property
     def open_count(self):
-        return len((list(filter(lambda x: x.status == 'open', self.issues))))
+        return self.issues.filter(Issue.status == 'open').count()
 
     @property
     def closed_count(self):
-        return len((list(filter(lambda x: x.status == 'closed', self.issues))))
+        return self.issues.filter(Issue.status == 'closed').count()
 
     @property
     def progress(self):
@@ -151,7 +151,7 @@ class Milestone(Base, Tagged, Dictionarizable):
             return 100
         if self.closed_count == 0:
             return 0
-        return self.open_count / len(self.issues) * 100
+        return self.open_count / self.issues.count() * 100
 
     def update(self, data):
         # Update tag
