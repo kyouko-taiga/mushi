@@ -24,6 +24,8 @@ from mushi.core.db.models import Token, User
 from mushi.core.utils.http import jsonify_list
 from mushi.core.utils.time import unix_timestamp
 
+from .exc import ApiError
+
 
 bp = Blueprint('auth', __name__)
 
@@ -95,10 +97,10 @@ def update_user(auth_token, email):
     except BadRequest as e:
         raise ApiError(e.description)
 
+    # Remove password from post data since user's password shouldn't be
+    # updated using this endpoint.
     if 'password' in post_data:
-        if not post_data['password']:
-            raise ApiError('Empty password.')
-        post_data['password'] = md5(post_data['password'].encode()).hexdigest()
+        del post_data['password']
 
     user.update(post_data)
 
@@ -124,8 +126,35 @@ def delete_user(auth_token, email):
     return '', 204
 
 
+@bp.route('/users/<email>/password', methods=['POST', 'PUT'])
+@require_auth_token
+def updated_user_password(auth_token, email):
+    if email not in ('me', auth_token.owner.email):
+        abort(403)
+    user = auth_token.owner
+
+    try:
+        post_data = request.get_json(force=True)
+    except BadRequest as e:
+        raise ApiError(e.description)
+
+    if not post_data.get('current_password', False):
+        raise ApiError('Missing or empty current password.')
+    current_password = md5(post_data['current_password'].encode()).hexdigest()
+    if current_password != user.password:
+        raise ApiError('Invalid current password.')
+
+    if not post_data.get('new_password', False):
+        raise ApiError('Missing or empty new password.')
+    user.password = md5(post_data['new_password'].encode()).hexdigest()
+
+    db_session.commit()
+
+    return '', 204
+
+
 @bp.route('/tokens/', methods=['POST'])
-def authenticate():
+def create_token():
     post_data = request.get_json(force=True)
 
     # get the credentials
