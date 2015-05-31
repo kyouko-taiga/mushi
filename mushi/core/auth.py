@@ -70,7 +70,7 @@ def require_auth_token(f):
 def make_auth_token(owner):
     """Generates an authentication token for the given owner."""
     new_token = Token()
-    new_token.value = binascii.hexlify(os.urandom(32)).decode()
+    new_token.value = str(binascii.hexlify(os.urandom(32)).decode())
     new_token.expires_at = utcnow() + timedelta(seconds=current_app.config['AUTH_TOKEN_DURATION'])
     new_token.owner = owner
     return new_token

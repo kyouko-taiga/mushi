@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from collections.abc import Mapping, Set, Sequence
+from collections import Mapping, Set, Sequence
+from six import string_types
 
 
 class Dictionarizable(object):
@@ -48,7 +49,7 @@ def dictionarize(model, max_depth=1):
     for key, value in fields:
         if isinstance(value, Mapping):
             rv[key] = {k: dictionarize(v, max_depth) for k, v in value.items()}
-        elif isinstance(value, (Set, Sequence)) and not isinstance(value, str):
+        elif isinstance(value, (Set, Sequence)) and not isinstance(value, string_types):
             rv[key] = list(dictionarize(v, max_depth) for v in value)
         else:
             rv[key] = dictionarize(value, max_depth)

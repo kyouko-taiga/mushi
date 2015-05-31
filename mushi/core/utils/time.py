@@ -26,7 +26,12 @@ def utcnow():
 
 def unix_timestamp(dt):
     """Returns a UNIX timestamp representing the given datetime."""
-    return max(floor(dt.timestamp()), 1)
+    try:
+        return floor(dt.timestamp())
+    except AttributeError:
+        # Handle Python 2.
+        dt_naive = dt.replace(tzinfo=None) - dt.utcoffset()
+        return floor((dt_naive - datetime(1970, 1, 1)).total_seconds())
 
 
 def from_unix_timestamp(unix_ts):
