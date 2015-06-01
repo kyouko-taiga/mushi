@@ -1,0 +1,33 @@
+{
+    "name": "Mushi",
+    "version": "0.1.0",
+    "description": "A minimalistic open-source bug tracker.",
+    "author": "Dimitri Racordon",
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/kyouko-taiga/mushi.git"
+    },
+    "devDependencies": {
+        "browserify": "latest",
+        "browserify-shim": "latest",
+        "envify": "latest",
+        "reactify": "latest",
+        "uglify-js": "latest",
+        "watchify": "latest"
+    },
+    "dependencies": {
+        "jquery": "~2.1.4"
+    },
+    "browserify": {
+        "transform": [
+            "browserify-shim"
+        ]
+    },
+    "browserify-shim": {
+        "jquery": "global:$"
+    },
+    "scripts": {
+        "build-login": "browserify mushi/apps/webui/frontend/login.js -t [envify --NODE_ENV production] | uglifyjs -cm > mushi/apps/webui/static/js/login.min.js"
+    }
+}

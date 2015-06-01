@@ -61,3 +61,7 @@ venv/
 
 # Static data / Database stuff
 data/
+
+# Browserify
+node_modules/
+*.min.js

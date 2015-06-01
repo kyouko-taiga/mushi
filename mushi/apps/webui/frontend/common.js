@@ -13,8 +13,9 @@
  * limitations under the License.
  */
 
-(function(mushi, undefined) {
+var $ = require('jquery');
 
+module.exports = (function(mushi, undefined) {
     // Extend jQuery to add a function that serializes from values to JSON.
     $.fn.serializeObject = function() {
         var o = {};
@@ -42,9 +43,9 @@
         icon = '<span class="icon fa ' + (icon || 'fa-bullhorn') + ' fa-2x"></span>';
         var ntf = new NotificationFx({
             message: icon + '<p>' + message + '</p>',
-            layout:  'bar',
-            effect:  'slidetop',
-            type:    type || 'danger'
+            layout: 'bar',
+            effect: 'slidetop',
+            type: type || 'danger'
         });
         ntf.show();
         return ntf;
@@ -143,5 +144,7 @@
         }
 
     }(mushi.api = mushi.api || {}));
+
+    return mushi;
 
 }(window.mushi = window.mushi || {}));

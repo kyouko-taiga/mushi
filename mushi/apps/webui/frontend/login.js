@@ -13,6 +13,10 @@
  * limitations under the License.
  */
 
+
+var $ = require('jquery');
+var mushi = require('./common');
+
 $('form').submit(function(e) {
     e.preventDefault();
 
