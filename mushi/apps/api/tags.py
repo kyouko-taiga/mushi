@@ -39,12 +39,17 @@ def list_tags(auth_token):
     if filters_string:
         query = parse_filters(query, Tag, filters_string, [Tag.name])
 
-    limit = request.args.get('limit', 20)
-    offset = request.args.get('offset', 0)
-    query = query.limit(limit).offset(offset)
+    count_only = ('count' in request.args) and (request.args['count'] in ('', '1', 'true'))
 
-    rv = [m.to_dict(max_depth=2) for m in query]
-    return jsonify_list(rv)
+    if count_only:
+        return jsonify({'count': query.count()})
+    else:
+        limit = request.args.get('limit', 20)
+        offset = request.args.get('offset', 0)
+        query = query.limit(limit).offset(offset)
+
+        rv = [m.to_dict(max_depth=2) for m in query]
+        return jsonify_list(rv)
 
 
 @bp.route('/tags/', methods=['POST'])

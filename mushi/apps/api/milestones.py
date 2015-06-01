@@ -45,12 +45,17 @@ def list_milestones(auth_token):
         query = parse_filters(
             query, Milestone, filters_string, [Milestone.name, Milestone.description])
 
-    limit = request.args.get('limit', 20)
-    offset = request.args.get('offset', 0)
-    query = query.order_by(Milestone.due_date).limit(limit).offset(offset)
+    count_only = ('count' in request.args) and (request.args['count'] in ('', '1', 'true'))
 
-    rv = [m.to_dict(max_depth=2) for m in query]
-    return jsonify_list(rv)
+    if count_only:
+        return jsonify({'count': query.count()})
+    else:
+        limit = request.args.get('limit', 20)
+        offset = request.args.get('offset', 0)
+        query = query.order_by(Milestone.due_date).limit(limit).offset(offset)
+
+        rv = [m.to_dict(max_depth=2) for m in query]
+        return jsonify_list(rv)
 
 
 @bp.route('/milestones/', methods=['POST'])
@@ -126,10 +131,14 @@ def list_issues(auth_token, slug):
     except NoResultFound:
         abort(404)
 
-    query = make_issue_list_query(milestone.issues)
+    count_only = ('count' in request.args) and (request.args['count'] in ('', '1', 'true'))
+    query = make_issue_list_query(query_base=milestone.issues, paged=(not count_only))
 
-    rv = [m.to_dict(max_depth=2) for m in query]
-    return jsonify_list(rv)
+    if count_only:
+        return jsonify({'count': query.count()})
+    else:
+        rv = [m.to_dict(max_depth=2) for m in query]
+        return jsonify_list(rv)
 
 
 @bp.route('/milestones/<slug>/issues/', methods=['POST'])
