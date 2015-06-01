@@ -39,8 +39,8 @@
             return (
             <div>
               <BreadcrumbComponent hierarchy={[]} current="Dashboard" />
-              <MilestoneList endpoint='milestones/' poll_interval='60000' />
-              <IssueList endpoint='issues/' poll_interval='60000' />
+              <MilestoneList endpoint='milestones/' poll_interval='60000' limit={3} />
+              <IssueList endpoint='issues/' poll_interval='60000' limit={10} />
             </div>
             );
         }
@@ -54,7 +54,7 @@
                 hierarchy={[{endpoint: '#', label: 'Dashboard'}]}
                 current="Milestones"
               />
-              <MilestoneList endpoint='milestones/' poll_interval='60000' />
+              <MilestoneList endpoint='milestones/' poll_interval='60000' limit={10} />
             </div>
             );
         }
@@ -72,7 +72,7 @@
                 current={this.props.router.args.slug}
               />
               <Milestone endpoint={'milestones/' + this.props.router.args.slug} />
-              <IssueList endpoint={'milestones/' + this.props.router.args.slug + '/issues/'} poll_interval='60000' hideMilestone />
+                <IssueList endpoint={'milestones/' + this.props.router.args.slug + '/issues/'} poll_interval='60000' limit={5} hideMilestone />
             </div>
             );
         }
@@ -86,7 +86,7 @@
                 hierarchy={[{endpoint: '#', label: 'Dashboard'}]}
                 current="Issues"
               />
-              <IssueList endpoint='issues/' poll_interval='60000' />
+              <IssueList endpoint='issues/' poll_interval='60000' limit={10} />
             </div>
             );
         }

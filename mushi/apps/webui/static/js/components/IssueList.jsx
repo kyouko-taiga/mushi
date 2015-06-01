@@ -89,12 +89,26 @@ var IssueListFilter = React.createClass({
 var IssueList = React.createClass({
     mixins: [SetIntervalMixin],
 
+    getIssueCount: function() {
+        mushi.api.get(this.props.endpoint, {
+            dataType: 'json',
+            data: {
+                filters: this.state.filters,
+                count: true
+            },
+            cache: false,
+            success: function(response) {
+                this.setState({count: response.count});
+            }.bind(this)
+        });
+    },
+
     loadIssues: function() {
         mushi.api.get(this.props.endpoint, {
             dataType: 'json',
             data: {
                 filters: this.state.filters,
-                limit: this.state.limit,
+                limit: this.props.limit,
                 offset: this.state.offset
             },
             cache: false,
@@ -108,19 +122,28 @@ var IssueList = React.createClass({
         return {
             data: [],
             filters: 'status:open',
-            limit: 5,
-            offset: 0
+            offset: 0,
+            count: 0
         };
     },
 
     componentDidMount: function() {
+        this.getIssueCount();
         this.loadIssues();
+
+        this.setInterval(this.getIssueCount, this.props.poll_interval);
         this.setInterval(this.loadIssues, this.props.poll_interval);
     },
 
     handleFiltersChange: function(filters_value) {
         this.state.filters = filters_value;
         this.loadIssues();
+    },
+
+    handlePaginate: function(page) {
+        this.setState({offset: page * this.props.limit}, function() {
+            this.loadIssues();
+        });
     },
 
     handleCreate: function(new_milestone) {
@@ -136,7 +159,7 @@ var IssueList = React.createClass({
     },
 
     render: function() {
-        list_items = (function(list_data) {
+        var list_items = (function(list_data) {
             var rv = list_data.map(function(item) {
                 return <IssueListItem key={item.uid} {...item} />;
             });
@@ -176,6 +199,16 @@ var IssueList = React.createClass({
                 {list_items}
               </div>
             </div>
+
+            <footer className="panel-footer text-right">
+              <Pager
+                limit={this.props.limit}
+                offset={this.state.offset}
+                count={this.state.count}
+                pagesShown={3}
+                onPaginate={this.handlePaginate}
+              />
+            </footer>
           </div>
         </article>
         )

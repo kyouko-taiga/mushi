@@ -85,12 +85,26 @@ var MilestoneListFilter = React.createClass({
 var MilestoneList = React.createClass({
     mixins: [SetIntervalMixin],
 
+    getMilestoneCount: function() {
+        mushi.api.get(this.props.endpoint, {
+            dataType: 'json',
+            data: {
+                filters: this.state.filters,
+                count: true
+            },
+            cache: false,
+            success: function(response) {
+                this.setState({count: response.count});
+            }.bind(this)
+        });
+    },
+
     loadMilestones: function() {
         mushi.api.get(this.props.endpoint, {
             dataType: 'json',
             data: {
                 filters: this.state.filters,
-                limit: this.state.limit,
+                limit: this.props.limit,
                 offset: this.state.offset
             },
             cache: false,
@@ -104,19 +118,28 @@ var MilestoneList = React.createClass({
         return {
             data: [],
             filters: null,
-            limit: 5,
-            offset: 0
+            offset: 0,
+            count: 0
         };
     },
 
     componentDidMount: function() {
+        this.getMilestoneCount();
         this.loadMilestones();
+
+        this.setInterval(this.getMilestoneCount, this.props.poll_interval);
         this.setInterval(this.loadMilestones, this.props.poll_interval);
     },
 
     handleFiltersChange: function(filters_value) {
         this.state.filters = filters_value;
         this.loadMilestones();
+    },
+
+    handlePaginate: function(page) {
+        this.setState({offset: page * this.props.limit}, function() {
+            this.loadMilestones();
+        });
     },
 
     handleCreate: function(new_milestone) {
@@ -132,7 +155,7 @@ var MilestoneList = React.createClass({
     },
 
     render: function() {
-        list_items = (function(list_data) {
+        var list_items = (function(list_data) {
             var rv = list_data.map(function(item) {
                 return <MilestoneListItem key={item.slug} {...item} />;
             });
@@ -172,6 +195,16 @@ var MilestoneList = React.createClass({
                 {list_items}
               </div>
             </div>
+
+            <footer className="panel-footer text-right">
+              <Pager
+                limit={this.props.limit}
+                offset={this.state.offset}
+                count={this.state.count}
+                pagesShown={3}
+                onPaginate={this.handlePaginate}
+              />
+            </footer>
           </div>
         </article>
         )
