@@ -26,7 +26,7 @@ var MilestoneListPage = React.createClass({
                     hierarchy={[{endpoint: '#', label: 'Dashboard'}]}
                     current="Milestones"
                 />
-                <MilestoneList endpoint='milestones/' poll_interval='60000' limit={3} />
+                <MilestoneList endpoint='milestones/' pollInterval={60000} limit={3} />
             </div>
         );
     }

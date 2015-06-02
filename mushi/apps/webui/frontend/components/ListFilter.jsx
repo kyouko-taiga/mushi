@@ -15,18 +15,29 @@
 
 var React = require('react');
 
-var IssueListFilterItem = React.createClass({
+var ListFilterItem = React.createClass({
+    propTypes: {
+        value: React.PropTypes.string,
+        onSelect: React.PropTypes.func
+    },
+
     handleClick: function(e) {
         e.preventDefault();
         this.props.onSelect(this.props.value);
     },
 
     render: function() {
-        return <li><a href="#" onClick={this.handleClick}>{this.props.label}</a></li>;
+        return <li><a href="#" onClick={this.handleClick}>{this.props.children}</a></li>;
     }
 });
 
-var IssueListFilter = React.createClass({
+var ListFilter = React.createClass({
+    propTypes: {
+        value: React.PropTypes.string,
+        predefinedFilters: React.PropTypes.array,
+        onFiltersChange: React.PropTypes.func
+    },
+
     getInitialState: function() {
         return {
             value: this.props.value,
@@ -42,12 +53,9 @@ var IssueListFilter = React.createClass({
     },
 
     handleDropdown: function(value) {
-        this.setState(
-            {value: value},
-            function() {
-                this.props.onFiltersChange(value);
-            }
-        );
+        this.setState({value: value}, function() {
+            this.props.onFiltersChange(value);
+        });
     },
 
     handleChange: function(e) {
@@ -67,14 +75,7 @@ var IssueListFilter = React.createClass({
                     <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                         <i className="fa fa-search"></i> <span className="caret"></span>
                     </button>
-                    <ul className="dropdown-menu" role="menu">
-                        <IssueListFilterItem onSelect={this.handleDropdown} value="status:open" label="Open" />
-                        <IssueListFilterItem onSelect={this.handleDropdown} value="status:closed" label="Closed" />
-                        <li className="divider"></li>
-                        <IssueListFilterItem onSelect={this.handleDropdown} value="level:critical" label="Critical" />
-                        <IssueListFilterItem onSelect={this.handleDropdown} value="level:important" label="Important" />
-                        <IssueListFilterItem onSelect={this.handleDropdown} value="level:minor" label="Minor" />
-                    </ul>
+                    {this.renderDropdown()}
                 </div>
                 <input
                     type="search" className="form-control" placeholder="Filter results"
@@ -83,7 +84,29 @@ var IssueListFilter = React.createClass({
                 />
             </div>
         );
+    },
+
+    renderDropdown: function() {
+        if (this.props.predefinedFilters.length == 0) {
+            return <ul />;
+        }
+
+        var divider_index = 0;
+        var items = this.props.predefinedFilters.map(function(item) {
+            if (item === 'divider') {
+                ++divider_index;
+                return <li key={'divider-' + divider_index} className="divider"></li>;
+            }
+
+            return (
+                <ListFilterItem key={item.label} value={item.value} onSelect={this.handleDropdown}>
+                    {item.label}
+                </ListFilterItem>
+            );
+        });
+
+        return <ul className="dropdown-menu" role="menu">{items}</ul>;
     }
 });
 
-module.exports = IssueListFilter;
+module.exports = ListFilter;

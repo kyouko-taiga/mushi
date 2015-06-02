@@ -31,7 +31,7 @@ var MilestoneDetailPage = React.createClass({
                     current={this.props.router.args.slug}
                 />
                 <MilestoneDetail endpoint={'milestones/' + this.props.router.args.slug} />
-                <IssueList endpoint={'milestones/' + this.props.router.args.slug + '/issues/'} poll_interval='60000' limit={5} hideMilestone />
+                <IssueList endpoint={'milestones/' + this.props.router.args.slug + '/issues/'} pollInterval={60000} limit={5} hideMilestone />
             </div>
         );
     }

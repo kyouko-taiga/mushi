@@ -26,7 +26,7 @@ var IssueListPage = React.createClass({
                     hierarchy={[{endpoint: '#', label: 'Dashboard'}]}
                     current="Issues"
                 />
-                <IssueList endpoint='issues/' poll_interval='60000' limit={10} />
+                <IssueList endpoint='issues/' pollInterval={60000} limit={10} />
             </div>
         );
     }

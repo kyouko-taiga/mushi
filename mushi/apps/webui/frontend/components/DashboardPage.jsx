@@ -24,8 +24,8 @@ var DashboardPage = React.createClass({
         return (
             <div>
                 <Breadcrumb hierarchy={[]} current="Dashboard" />
-                <MilestoneList endpoint='milestones/' poll_interval='60000' limit={3} />
-                <IssueList endpoint='issues/' poll_interval='60000' limit={10} />
+                <MilestoneList endpoint='milestones/' pollInterval={60000} limit={3} />
+                <IssueList endpoint='issues/' pollInterval={60000} limit={10} />
             </div>
         );
     }
