@@ -26,3 +26,5 @@ var SetIntervalMixin = {
         this.intervals.map(clearInterval);
     }
 };
+
+module.exports = {SetIntervalMixin: SetIntervalMixin};

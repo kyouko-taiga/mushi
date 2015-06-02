@@ -13,7 +13,13 @@
  * limitations under the License.
  */
 
-var Button = ReactBootstrap.Button;
+var React = require('react');
+
+var moment = require('moment');
+
+var Button = require('react-bootstrap/lib/Button');
+
+var mushi = require('../../common');
 
 var IssueListItem = React.createClass({
     getInitialState: function() {
@@ -72,9 +78,9 @@ var IssueListItem = React.createClass({
         var milestone = (function(milestone) {
             if (milestone) {
                 return (
-                <span className="mu-issue-meta-item">
-                  in <a className="mu-app-link" href={'#milestones/' + milestone.slug}>{milestone.name}</a>
-                </span>  
+                    <span className="mu-issue-meta-item">
+                        in <a className="mu-app-link" href={'#milestones/' + milestone.slug}>{milestone.name}</a>
+                    </span>  
                 );
             } else {
                 return <span />;
@@ -118,21 +124,23 @@ var IssueListItem = React.createClass({
         }.bind(this))(this.state.status);
 
         return (
-        <div className="mu-list-item clearfix">
-          <div className="mu-issue-status">{issue_icon}</div>
-          <div className="mu-issue-description">
-            <div className="mu-issue-label">
-              {level_label} <a className="mu-app-link" href={'#issues/' + this.state.uid}>{this.state.label}</a>
+            <div className="mu-list-item clearfix">
+                <div className="mu-issue-status">{issue_icon}</div>
+                <div className="mu-issue-description">
+                    <div className="mu-issue-label">
+                        {level_label} <a className="mu-app-link" href={'#issues/' + this.state.uid}>{this.state.label}</a>
+                    </div>
+                    <div className="mu-issue-meta">
+                        <div className="mu-issue-meta-item">
+                            #{this.state.uid} {this.state.last_action} {author} {updated_at} {milestone}
+                        </div>
+                        {tags}
+                    </div>
+                </div>
+                <div className="mu-issue-actions">{issue_action}</div>
             </div>
-            <div className="mu-issue-meta">
-              <div className="mu-issue-meta-item">
-                #{this.state.uid} {this.state.last_action} {author} {updated_at} {milestone}
-              </div>
-              {tags}
-            </div>
-          </div>
-          <div className="mu-issue-actions">{issue_action}</div>
-        </div>
         );
     }
 });
+
+module.exports = IssueListItem;

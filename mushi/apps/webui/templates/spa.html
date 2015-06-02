@@ -45,34 +45,20 @@
 {% endblock content_wrapper %}
 
 {% block page_scripts %}
-<!-- React -->
-<script type="text/javascript" src="//fb.me/react-0.13.3.js"></script>
-<script type="text/javascript" src="//fb.me/JSXTransformer-0.13.3.js"></script>
+<!-- marked.js -->
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='libs/react-bootstrap/react-bootstrap.min.js') }}"></script>
 
 <!-- Backbone -->
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.2.0/backbone-min.js"></script>
 
-<!-- Moment.js -->
+<!-- moment.js -->
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
 
-<!-- Application specific scripts -->
-<script type="text/jsx" src="{{ url_for('static', filename='js/components/Mixins.jsx') }}"></script>
-<script type="text/jsx" src="{{ url_for('static', filename='js/components/Pager.jsx') }}"></script>
-
-<script type="text/jsx" src="{{ url_for('static', filename='js/components/MilestoneForm.jsx') }}"></script>
-<script type="text/jsx" src="{{ url_for('static', filename='js/components/MilestoneListItem.jsx') }}"></script>
-<script type="text/jsx" src="{{ url_for('static', filename='js/components/MilestoneList.jsx') }}"></script>
-<script type="text/jsx" src="{{ url_for('static', filename='js/components/Milestone.jsx') }}"></script>
-
-<script type="text/jsx" src="{{ url_for('static', filename='js/components/IssueForm.jsx') }}"></script>
-<script type="text/jsx" src="{{ url_for('static', filename='js/components/IssueListItem.jsx') }}"></script>
-<script type="text/jsx" src="{{ url_for('static', filename='js/components/IssueList.jsx') }}"></script>
-<script type="text/jsx" src="{{ url_for('static', filename='js/components/Issue.jsx') }}"></script>
-
-<script type="text/jsx" src="{{ url_for('static', filename='js/components/Settings.jsx') }}"></script>
-
-<script type="text/jsx" src="{{ url_for('static', filename='js/mushi.jsx') }}"></script>
+<!-- Application script -->
+{% if config['DEBUG'] %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/mushi.js') }}"></script>
+{% else %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/mushi.min.js') }}"></script>
+{% endif %}
 {% endblock page_scripts %}

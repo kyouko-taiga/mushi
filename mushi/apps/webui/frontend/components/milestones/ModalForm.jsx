@@ -13,10 +13,11 @@
  * limitations under the License.
  */
 
-var Button = ReactBootstrap.Button;
-var Input = ReactBootstrap.Input;
-var Modal = ReactBootstrap.Modal;
-var OverlayMixin = ReactBootstrap.OverlayMixin;
+var React = require('react');
+
+var Button = require('react-bootstrap/lib/Button');
+var Input = require('react-bootstrap/lib/Input');
+var Modal = require('react-bootstrap/lib/Modal');
 
 var MilestoneInputMixin = {
     getInitialState: function() {
@@ -49,11 +50,11 @@ var MilestoneNameInput = React.createClass({
 
     render: function() {
         return (
-        <Input
-          {...this.props} type="text" label="Name" placeholder="Enter name"
-          bsStyle={this.state.bsStyle} value={this.state.value}
-          onChange={this.handleChange} onBlur={this.handleBlur}
-        />
+            <Input
+                {...this.props} type="text" label="Name" placeholder="Enter name"
+                bsStyle={this.state.bsStyle} value={this.state.value}
+                onChange={this.handleChange} onBlur={this.handleBlur}
+            />
         );
     }
 });
@@ -67,11 +68,12 @@ var MilestoneDescriptionInput = React.createClass({
 
     render: function() {
         return (
-        <Input
-          {...this.props} type="textarea" label="Description (optional)"
-          placeholder="Enter description"
-          bsStyle={this.state.bsStyle} value={this.state.value} onChange={this.handleChange}
-        />
+            <Input
+                {...this.props} type="textarea" label="Description (optional)"
+                placeholder="Enter description"
+                bsStyle={this.state.bsStyle} value={this.state.value}
+                onChange={this.handleChange}
+            />
         );
     }
 });
@@ -98,17 +100,17 @@ var MilestoneDueDateInput = React.createClass({
 
     render: function() {
         return (
-        <Input
-          {...this.props} type="date" label="Due data (optional)"
-          placeholder="yyyy-mm-dd (Ex: 2015-05-26)"
-          bsStyle={this.state.bsStyle} value={this.state.value}
-          onChange={this.handleChange} onBlur={this.handleBlur}
-        />
+            <Input
+                {...this.props} type="date" label="Due data (optional)"
+                placeholder="yyyy-mm-dd (Ex: 2015-05-26)"
+                bsStyle={this.state.bsStyle} value={this.state.value}
+                onChange={this.handleChange} onBlur={this.handleBlur}
+            />
         );
     }
 });
 
-var MilestoneFormModal = React.createClass({
+var MilestoneModalForm = React.createClass({
 
     handleSubmit: function(e) {
         e.preventDefault();
@@ -116,8 +118,6 @@ var MilestoneFormModal = React.createClass({
         // Retrieve form values.
         var data = {};
         var is_valid = true;
-
-        var i = 0;
 
         for (var input_name in this.refs) {
             var input = this.refs[input_name];
@@ -167,20 +167,21 @@ var MilestoneFormModal = React.createClass({
         }
 
         return (
-        <Modal {...this.props}>
-          <form onSubmit={this.handleSubmit}>
-            <div className="modal-body">
-              <MilestoneNameInput ref="name" value={this.props.name} required />
-              <MilestoneDescriptionInput ref="description" value={this.props.description} />
-              <MilestoneDueDateInput ref="due_date" value={due_date} />
-            </div>
-            <div className="modal-footer">
-              <Button onClick={this.props.onRequestHide}>Cancel</Button>
-              <Button type="submit" bsStyle={this.props.submitStyle}>{this.props.submitText}</Button>
-            </div>
-          </form>
-        </Modal>
+            <Modal {...this.props}>
+                <form onSubmit={this.handleSubmit}>
+                    <div className="modal-body">
+                        <MilestoneNameInput ref="name" value={this.props.name} required />
+                        <MilestoneDescriptionInput ref="description" value={this.props.description} />
+                        <MilestoneDueDateInput ref="due_date" value={due_date} />
+                    </div>
+                    <div className="modal-footer">
+                        <Button onClick={this.props.onRequestHide}>Cancel</Button>
+                        <Button type="submit" bsStyle={this.props.submitStyle}>{this.props.submitText}</Button>
+                    </div>
+                </form>
+            </Modal>
         );
     }
 });
 
+module.exports = MilestoneModalForm;

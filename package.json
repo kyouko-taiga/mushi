@@ -11,23 +11,34 @@
     "devDependencies": {
         "browserify": "latest",
         "browserify-shim": "latest",
-        "envify": "latest",
         "reactify": "latest",
         "uglify-js": "latest",
         "watchify": "latest"
     },
     "dependencies": {
-        "jquery": "~2.1.4"
+        "jquery": "~2.1.4",
+        "backbone": "~1.2.0",
+        "react": "~0.13.3",
+        "react-bootstrap": "~0.23.0",
+        "marked": "0.3.2",
+        "moment": "~2.10.3"
     },
     "browserify": {
         "transform": [
-            "browserify-shim"
+            "browserify-shim",
+            "reactify"
         ]
     },
     "browserify-shim": {
-        "jquery": "global:$"
+        "jquery": "global:$",
+        "backbone": "global:Backbone",
+        "marked": "global:marked",
+        "moment": "global:moment"
     },
     "scripts": {
-        "build-login": "browserify mushi/apps/webui/frontend/login.js -t [envify --NODE_ENV production] | uglifyjs -cm > mushi/apps/webui/static/js/login.min.js"
+        "build-login": "browserify mushi/apps/webui/frontend/login.js | uglifyjs -cm > mushi/apps/webui/static/js/login.min.js",
+        "watch-login": "watchify mushi/apps/webui/frontend/login.js -o mushi/apps/webui/static/js/login.js -v -d",
+        "build-app": "browserify mushi/apps/webui/frontend/mushi.jsx -t reactify --extension=.jsx | uglifyjs -cm > mushi/apps/webui/static/js/mushi.min.js",
+        "watch-app": "watchify mushi/apps/webui/frontend/mushi.jsx -t reactify --extension=.jsx -o mushi/apps/webui/static/js/mushi.js -v -d"
     }
 }

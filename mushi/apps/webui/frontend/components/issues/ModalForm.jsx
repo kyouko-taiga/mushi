@@ -13,10 +13,13 @@
  * limitations under the License.
  */
 
-var Button = ReactBootstrap.Button;
-var Input = ReactBootstrap.Input;
-var Modal = ReactBootstrap.Modal;
-var OverlayMixin = ReactBootstrap.OverlayMixin;
+var React = require('react');
+
+var Button = require('react-bootstrap/lib/Button');
+var Input = require('react-bootstrap/lib/Input');
+var Modal = require('react-bootstrap/lib/Modal');
+
+var mushi = require('../../common');
 
 var IssueInputMixin = {
     getInitialState: function() {
@@ -54,11 +57,11 @@ var IssueLabelInput = React.createClass({
 
     render: function() {
         return (
-        <Input
-          {...this.props} type="text" label="Label" placeholder="Enter Label"
-          bsStyle={this.state.bsStyle} value={this.state.value}
-          onChange={this.handleChange} onBlur={this.handleBlur}
-        />
+            <Input
+                {...this.props} type="text" label="Label" placeholder="Enter Label"
+                bsStyle={this.state.bsStyle} value={this.state.value}
+                onChange={this.handleChange} onBlur={this.handleBlur}
+            />
         );
     }
 });
@@ -72,14 +75,15 @@ var IssueLevelInput = React.createClass({
 
     render: function() {
         return (
-        <Input
-          {...this.props} type="select" label="Level"
-          bsStyle={this.state.bsStyle} value={this.state.value} onChange={this.handleChange}
-        >
-          <option value="critical">Critical</option>
-          <option value="important">Important</option>
-          <option value="minor">Minor</option>
-        </Input>
+            <Input
+                {...this.props} type="select" label="Level"
+                bsStyle={this.state.bsStyle} value={this.state.value}
+                onChange={this.handleChange}
+            >
+                <option value="critical">Critical</option>
+                <option value="important">Important</option>
+                <option value="minor">Minor</option>
+            </Input>
         );
     }
 });
@@ -93,13 +97,14 @@ var IssueStatuslInput = React.createClass({
 
     render: function() {
         return (
-        <Input
-          {...this.props} type="select" label="Status"
-          bsStyle={this.state.bsStyle} value={this.state.value} onChange={this.handleChange}
-        >
-          <option value="open">Open</option>
-          <option value="closed">Closed</option>
-        </Input>
+            <Input
+                {...this.props} type="select" label="Status"
+                bsStyle={this.state.bsStyle} value={this.state.value}
+                onChange={this.handleChange}
+            >
+                <option value="open">Open</option>
+                <option value="closed">Closed</option>
+            </Input>
         );
     }
 });
@@ -113,11 +118,12 @@ var IssueDescriptionInput = React.createClass({
 
     render: function() {
         return (
-        <Input
-          {...this.props} type="textarea" label="Description (optional)"
-          placeholder="Enter description"
-          bsStyle={this.state.bsStyle} value={this.state.value} onChange={this.handleChange}
-        />
+            <Input
+                {...this.props} type="textarea" label="Description (optional)"
+                placeholder="Enter description"
+                bsStyle={this.state.bsStyle} value={this.state.value}
+                onChange={this.handleChange}
+            />
         );
     }
 });
@@ -140,10 +146,11 @@ var IssueReproducibleInput = React.createClass({
 
     render: function() {
         return (
-        <Input
-          {...this.props} type="checkbox" label="Reproducible"
-          checked={this.state.checked} onChange={this.handleChange}
-        />
+            <Input
+                {...this.props} type="checkbox" label="Reproducible"
+                checked={this.state.checked}
+                onChange={this.handleChange}
+            />
         );
     }
 });
@@ -181,17 +188,18 @@ var IssueMilestoneInput = React.createClass({
         );
 
         return (
-        <Input
-          {...this.props} type="select" label="Milestone (optional)"
-          bsStyle={this.state.bsStyle} value={this.state.value} onChange={this.handleChange}
-        >
-          {options}
-        </Input>
+            <Input
+                {...this.props} type="select" label="Milestone (optional)"
+                bsStyle={this.state.bsStyle} value={this.state.value}
+                onChange={this.handleChange}
+            >
+                {options}
+            </Input>
         );
     }
 });
 
-var IssueFormModal = React.createClass({
+var IssueModalForm = React.createClass({
 
     handleSubmit: function(e) {
         e.preventDefault();
@@ -199,8 +207,6 @@ var IssueFormModal = React.createClass({
         // Retrieve form values.
         var data = {};
         var is_valid = true;
-
-        var i = 0;
 
         for (var input_name in this.refs) {
             var input = this.refs[input_name];
@@ -241,23 +247,24 @@ var IssueFormModal = React.createClass({
         }
 
         return (
-        <Modal {...this.props}>
-          <form onSubmit={this.handleSubmit}>
-            <div className="modal-body">
-              <IssueLabelInput ref="label" value={this.props.label} required />
-              <IssueLevelInput ref="level" value={this.props.level || 'important'} required />
-              <IssueStatuslInput ref="status" value={this.props.status || 'open'} required />
-              <IssueDescriptionInput ref="description" value={this.props.description} />
-              <IssueReproducibleInput ref="reproducible" checked={this.props.reproducible} />
-              {milestone_input}
-            </div>
-            <div className="modal-footer">
-              <Button onClick={this.props.onRequestHide}>Cancel</Button>
-              <Button type="submit" bsStyle={this.props.submitStyle}>{this.props.submitText}</Button>
-            </div>
-          </form>
-        </Modal>
+            <Modal {...this.props}>
+                <form onSubmit={this.handleSubmit}>
+                    <div className="modal-body">
+                        <IssueLabelInput ref="label" value={this.props.label} required />
+                        <IssueLevelInput ref="level" value={this.props.level || 'important'} required />
+                        <IssueStatuslInput ref="status" value={this.props.status || 'open'} required />
+                        <IssueDescriptionInput ref="description" value={this.props.description} />
+                        <IssueReproducibleInput ref="reproducible" checked={this.props.reproducible} />
+                        {milestone_input}
+                    </div>
+                    <div className="modal-footer">
+                        <Button onClick={this.props.onRequestHide}>Cancel</Button>
+                        <Button type="submit" bsStyle={this.props.submitStyle}>{this.props.submitText}</Button>
+                    </div>
+                </form>
+            </Modal>
         );
     }
 });
 
+module.exports = IssueModalForm;

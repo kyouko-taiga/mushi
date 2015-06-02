@@ -13,6 +13,8 @@
  * limitations under the License.
  */
 
+var React = require('react');
+
 var PagerItem = React.createClass({
     propTypes: {
         active: React.PropTypes.bool,
@@ -38,7 +40,7 @@ var PagerItem = React.createClass({
 
         return (
             <li className={item_classes.join(' ')}>
-              <a href="#" onClick={handler}>{this.props.children}</a>
+                <a href="#" onClick={handler}>{this.props.children}</a>
             </li>
         );
     }
@@ -75,9 +77,9 @@ var Pager = React.createClass({
         for (var i = begin; i < end; ++i) {
             items.push(
                 <PagerItem
-                  index={i} active={i == current_page} key={i} onPaginate={this.props.onPaginate}
+                    index={i} active={i == current_page} key={i} onPaginate={this.props.onPaginate}
                 >
-                  {i + 1}
+                    {i + 1}
                 </PagerItem>
             );
         }
@@ -90,9 +92,9 @@ var Pager = React.createClass({
 
         return (
             <nav className="mu-pagination-wrapper">
-              <ul className="pagination">
-                {items}
-              </ul>
+                <ul className="pagination">
+                    {items}
+                </ul>
             </nav>
         );
     },
@@ -100,11 +102,11 @@ var Pager = React.createClass({
     renderPreviousLink: function(page_count, current_page) {
         return (
             <PagerItem
-              index={current_page - 1} disabled={current_page <= 0}
-              aria-label="Previous" key="prev"
-              onPaginate={this.props.onPaginate}
+                index={current_page - 1} disabled={current_page <= 0}
+                key="prev" onPaginate={this.props.onPaginate}
+                aria-label="Previous"
             >
-              <span aria-hidden="true">&laquo;</span>
+                <span aria-hidden="true">&laquo;</span>
             </PagerItem>
         );
     },
@@ -112,12 +114,14 @@ var Pager = React.createClass({
     renderNextLink: function(page_count, current_page) {
         return (
             <PagerItem
-              index={current_page + 1} disabled={current_page >= (page_count - 1)}
-              aria-label="Next" key="next"
-              onPaginate={this.props.onPaginate}
+                index={current_page + 1} disabled={current_page >= (page_count - 1)}
+                key="next" onPaginate={this.props.onPaginate}
+                aria-label="Next"
             >
-              <span aria-hidden="true">&raquo;</span>
+                <span aria-hidden="true">&raquo;</span>
             </PagerItem>
         );
     }
 });
+
+module.exports = Pager;
