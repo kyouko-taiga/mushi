@@ -9,7 +9,7 @@ The frontend is written with Twitter's Bootstrap and Facebook's React.js.
 This tutorial should help you getting started and run your own version of Mushi.
 
 ### Prerequisites
-As prerequisites , the remaining of this guide expects that you have [python](https://www.python.org) and [pip](https://pip.pypa.io/en/latest/installing.html) installed on your system.
+As prerequisites , the remaining of this guide expects that you have [python](https://www.python.org), [pip](https://pip.pypa.io/en/latest/installing.html) and [npm](https://www.npmjs.com) installed on your system.
 
 Additionally, it is recommended to run Mushi in its own virtual environment, so you may install [virtualenv](http://www.virtualenv.org/en/latest/) as well.
 Then, you may create an environment wherever you like, for instance:
@@ -52,7 +52,7 @@ For the sake of this quick start, we will use the default configuration.
 If however you want to override them for whatever reason, please refer to the section [Handling configuration](#handling-configuration) before continuing this tutorial.
 
 Before we can run our server, we need to initialize the database.
-Open a terminal to the root of mushi and type the following:
+Open a terminal to the root of Mushi and type the following:
 
 ```
 mkdir data
@@ -74,8 +74,22 @@ And finally, we are ready to run our server:
 python manage.py server run
 ```
 
+This command will tell you your server is now running at [http://localhost:5000/](http://localhost:5000/) but don't rush to your favourite web browser yet.
+If you navigate to this address, not much will happen, because we didn't built the front end application yet.
+Open a terminal at the root of Mushi and type the following:
+
+```
+npm install
+npm run build-login
+npm run build-app
+```
+
 Et voilà!
-Navigate with your favourite browser to [http://localhost:5000/login](http://localhost:5000/login) and you should see tje login page of Mushi.
+This time you can open your browser to [http://localhost:5000/login](http://localhost:5000/login) and you should see the login page of Mushi.
+
+*Note that the above commands will build minified files, which is the format Mushi will include by default.
+However, it you run Mushi in debug mode, it will try to include non-minified files but won't find them.
+To build the non-minified files, run the command ```npm run watch-[login|app]```.*
 
 <a name="handling-configuration">
 ## Handling configuration
@@ -183,7 +197,7 @@ Go on a create it:
 useradd --system -m mushi
 ```
 
-If you use SQLite as your database engine, be sure to give write access to the new mushi user.
+If you use SQLite as your database engine, be sure to give write access to the new Mushi user.
 
 ```
 chown mushi:mushi /path/to/database/file
