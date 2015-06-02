@@ -36,9 +36,14 @@
         "moment": "global:moment"
     },
     "scripts": {
-        "build-login": "browserify mushi/apps/webui/frontend/login.js | uglifyjs -cm > mushi/apps/webui/static/js/login.min.js",
-        "watch-login": "watchify mushi/apps/webui/frontend/login.js -o mushi/apps/webui/static/js/login.js -v -d",
-        "build-app": "browserify mushi/apps/webui/frontend/mushi.jsx -t reactify --extension=.jsx | uglifyjs -cm > mushi/apps/webui/static/js/mushi.min.js",
-        "watch-app": "watchify mushi/apps/webui/frontend/mushi.jsx -t reactify --extension=.jsx -o mushi/apps/webui/static/js/mushi.js -v -d"
+        "setup": "rm -rf mushi/apps/webui/static/dist/ && mkdir -p mushi/apps/webui/static/dist/js",
+        "build-login": "browserify mushi/apps/webui/frontend/login.js | uglifyjs -cm > mushi/apps/webui/static/dist/js/login.min.js",
+        "build-app": "browserify mushi/apps/webui/frontend/mushi.jsx -t reactify --extension=.jsx | uglifyjs -cm > mushi/apps/webui/static/dist/js/mushi.min.js",
+        "build": "npm run build-login && npm run build-app",
+        "build-login-debug": "browserify mushi/apps/webui/frontend/login.js -o mushi/apps/webui/static/dist/js/login.js -v -d",
+        "build-app-debug": "browserify mushi/apps/webui/frontend/mushi.jsx -t reactify --extension=.jsx -o mushi/apps/webui/static/dist/js/mushi.js -v -d",
+        "build-debug": "npm run build-login-debug && npm run build-app-debug",
+        "watch-login": "watchify mushi/apps/webui/frontend/login.js -o mushi/apps/webui/static/dist/js/login.js -v -d",
+        "watch-app": "watchify mushi/apps/webui/frontend/mushi.jsx -t reactify --extension=.jsx -o mushi/apps/webui/static/dist/js/mushi.js -v -d"
     }
 }

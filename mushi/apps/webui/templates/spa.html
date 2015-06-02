@@ -57,8 +57,8 @@
 
 <!-- Application script -->
 {% if config['DEBUG'] %}
-<script type="text/javascript" src="{{ url_for('static', filename='js/mushi.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='dist/js/mushi.js') }}"></script>
 {% else %}
-<script type="text/javascript" src="{{ url_for('static', filename='js/mushi.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='dist/js/mushi.min.js') }}"></script>
 {% endif %}
 {% endblock page_scripts %}

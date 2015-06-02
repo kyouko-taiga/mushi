@@ -80,16 +80,16 @@ Open a terminal at the root of Mushi and type the following:
 
 ```
 npm install
-npm run build-login
-npm run build-app
+npm run setup
+npm run build
 ```
 
 Et voilà!
 This time you can open your browser to [http://localhost:5000/login](http://localhost:5000/login) and you should see the login page of Mushi.
 
 *Note that the above commands will build minified files, which is the format Mushi will include by default.
-However, it you run Mushi in debug mode, it will try to include non-minified files but won't find them.
-To build the non-minified files, run the command ```npm run watch-[login|app]```.*
+However, it you run Mushi in debug mode, it will try to include non-minified files and won't find them.
+To build the non-minified files, run the command ```npm run build-debug```.*
 
 <a name="handling-configuration">
 ## Handling configuration

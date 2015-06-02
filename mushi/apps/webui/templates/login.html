@@ -25,8 +25,8 @@
 
 {% block page_scripts %}
 {% if config['DEBUG'] %}
-<script type="text/javascript" src="{{ url_for('static', filename='js/login.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='dist/js/login.js') }}"></script>
 {% else %}
-<script type="text/javascript" src="{{ url_for('static', filename='js/login.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='dist/js/login.min.js') }}"></script>
 {% endif %}
 {% endblock page_scripts %}

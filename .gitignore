@@ -64,4 +64,4 @@ data/
 
 # Browserify
 node_modules/
-*.min.js
+mushi/apps/webui/static/dist/
