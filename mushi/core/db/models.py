@@ -265,12 +265,12 @@ class Issue(Base, Tagged, Dictionarizable):
 
 class Attachment(Base, Dictionarizable):
 
-    _dictionarizable_attrs = ('name', 'mime_type', 'url', 'thumbnail_url')
+    _dictionarizable_attrs = ('uid', 'name', 'mime_type')
 
-    uid = Column(Integer, primary_key=True)
+    uid = Column(String, primary_key=True)
+    name = Column(String)
     mime_type = Column(String, default='application/octet-stream')
-    url = Column(String)
-    thumbnail_url = Column(String)
+    filename = Column(String)
 
     def __str__(self):
         return '%s attachment' % self.mime_type

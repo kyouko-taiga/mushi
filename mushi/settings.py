@@ -28,3 +28,11 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'data', 'mushi.de
 
 # Authentication
 AUTH_TOKEN_DURATION = 86400
+
+# File handling
+UPLOAD_FOLDER = os.path.join(basedir, 'data', 'attachments')
+MAX_CONTENT_LENGTH = 1073741824
+ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+# Thumbnails
+ENABLE_THUMBAILS = False
