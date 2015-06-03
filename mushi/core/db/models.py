@@ -172,8 +172,8 @@ class Milestone(Base, Tagged, Dictionarizable):
 class Issue(Base, Tagged, Dictionarizable):
 
     _dictionarizable_attrs = (
-        'uid', 'label', 'description', 'level', 'status', 'confirmed', 'reproducible',
-        'milestone', 'tags', 'last_action', 'open_at', 'closed_at', 'updated_at', 'author')
+        'uid', 'label', 'description', 'level', 'status', 'open_at', 'closed_at', 'updated_at',
+        'last_action', 'confirmed', 'reproducible', 'milestone', 'tags', 'attachments', 'author')
 
     uid = Column(Integer, primary_key=True)
     label = Column(String, nullable=False)
@@ -200,6 +200,8 @@ class Issue(Base, Tagged, Dictionarizable):
             Column('tag_name', ForeignKey('tag.name'))
         )
     )
+
+    attachments = relationship('Attachment', backref='issue', cascade='all, delete-orphan')
 
     @property
     def last_action(self):
@@ -252,3 +254,21 @@ class Issue(Base, Tagged, Dictionarizable):
 
     def __repr__(self):
         return '<Issue %i>' % self.uid
+
+
+class Attachment(Base, Dictionarizable):
+
+    _dictionarizable_attrs = ('name', 'mime_type', 'url', 'thumbnail_url')
+
+    uid = Column(Integer, primary_key=True)
+    mime_type = Column(String, default='application/octet-stream')
+    url = Column(String)
+    thumbnail_url = Column(String)
+
+    issue_uid = Column(Integer, ForeignKey('issue.uid'), nullable=True)
+
+    def __str__(self):
+        return '%s attachment' % self.mime_type
+
+    def __repr__(self):
+        return '<Attachment %i>' % self.uid
