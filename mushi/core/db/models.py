@@ -201,7 +201,14 @@ class Issue(Base, Tagged, Dictionarizable):
         )
     )
 
-    attachments = relationship('Attachment', backref='issue', cascade='all, delete-orphan')
+    attachments = relationship(
+        'Attachment',
+        secondary=Table(
+            'issue_attachments', Base.metadata,
+            Column('issue_uid', ForeignKey('issue.uid')),
+            Column('attachment_uid', ForeignKey('attachment.uid'))
+        )
+    )
 
     @property
     def last_action(self):
@@ -264,8 +271,6 @@ class Attachment(Base, Dictionarizable):
     mime_type = Column(String, default='application/octet-stream')
     url = Column(String)
     thumbnail_url = Column(String)
-
-    issue_uid = Column(Integer, ForeignKey('issue.uid'), nullable=True)
 
     def __str__(self):
         return '%s attachment' % self.mime_type
