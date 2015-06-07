@@ -35,6 +35,12 @@ Go on and install it as well:
 pip install python-dateutil
 ```
 
+Finally, if you want to generate thumbnails for image attachments, you have to install [Pillow](https://pillow.readthedocs.org/installation.html), the "friendly PIL fork":
+
+```
+pip install pillow
+```
+
 And that's it for the server dependencies.
 
 ### Installation of Mushi
@@ -126,6 +132,17 @@ Its value can be any string compatible with the [format of SQLAlchemy](http://do
 #### ```AUTH_TOKEN_DURATION```
 This key is used to configure the duration of the authentication tokens delivered by the API.
 Its value should be a natural number denoting the number of seconds tokens will be valid for.
+
+#### ```UPLOAD_FOLDER```
+This key is used to set the path to the folder Mushi will keep the uploaded attachments.
+Note that the specified path must exists and be writable by the user that will run the Mushi server.
+
+#### ```ALLOWED_EXTENSIONS```
+This key is used to configure the set of allowed extensions for uploaded attachments.
+
+#### ```ENABLE_THUMBAILS```
+This key is used to set whether or not create attachment thumbnails.
+Note that if you set it to ```True```, you must have ```Pillow``` installed on your system, otherwise Mushi will fail while trying to serve thumbnails.
 
 ## Deploying Mushi on Apache
 Using ```python manage.py server run``` is not a viable option to use Mushi in a production environment.
