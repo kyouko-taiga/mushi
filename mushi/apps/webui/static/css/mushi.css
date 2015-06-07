@@ -299,6 +299,12 @@ body > .navbar + .container {
     margin-left: 0;
 }
 
+.mu-issue-attachments .mu-thumbnail {
+    display: inline-block;
+    width: 128px;
+    height: 128px;
+}
+
 .mu-thumbnail .mu-preview {
     width: 100%;
     height: 100%;

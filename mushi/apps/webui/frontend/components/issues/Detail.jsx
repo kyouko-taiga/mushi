@@ -13,6 +13,8 @@
  * limitations under the License.
  */
 
+var $ = require('jquery');
+
 var React = require('react');
 
 var moment = require('moment');
@@ -20,6 +22,7 @@ var moment = require('moment');
 var Button = require('react-bootstrap/lib/Button');
 var Modal = require('react-bootstrap/lib/Modal');
 var ModalTrigger = require('react-bootstrap/lib/ModalTrigger');
+var Thumbnail = require('react-bootstrap/lib/Thumbnail');
 
 var marked = require('marked');
 
@@ -46,6 +49,31 @@ var IssueDeleteModal = React.createClass({
     }
 });
 
+var AttachmentThumbnail = React.createClass({
+    show: function(e) {
+        e.preventDefault();
+
+        $.magnificPopup.open({
+            items: {
+                src: this.props.endpoint + '/original'
+            },
+            type: this.props.mimetype.split('/')[0]
+        });
+    },
+
+    render: function() {
+        var preview_style = {backgroundImage: 'url(' + this.props.endpoint + '/thumbnail)'};
+
+        return (
+            <div className="mu-thumbnail">
+                <a href={this.props.endpoint + '/original'} onClick={this.show}>
+                    <div className="mu-preview" style={preview_style} />
+                </a>
+            </div>
+        );
+    }
+});
+
 var IssueDetail = React.createClass({
     loadIssue: function() {
         mushi.api.get(this.props.endpoint, {
@@ -58,7 +86,23 @@ var IssueDetail = React.createClass({
     },
 
     getInitialState: function() {
-        return {data: []};
+        return {
+            attachments: [],
+            author: null,
+            closed_at: null,
+            confirmed: null,
+            description: null,
+            label: null,
+            last_action: null,
+            level: null,
+            milestone: null,
+            open_at: null,
+            reproducible: null,
+            status: null,
+            tags: [],
+            uid: null,
+            updated_at: null
+        };
     },
 
     componentDidMount: function() {
@@ -85,9 +129,12 @@ var IssueDetail = React.createClass({
     },
 
     render: function() {
-        var raw_markup = '';
+        var description = '';
         if (this.state.description) {
-            raw_markup = marked(this.state.description, {sanitize: true});
+            var raw_markup = marked(this.state.description, {sanitize: true});
+            description = <span dangerouslySetInnerHTML={{__html: raw_markup}} />;
+        } else {
+            description = <i>No description.</i>;
         }
 
         var level_label = (function(level) {
@@ -133,6 +180,11 @@ var IssueDetail = React.createClass({
             }
         })(this.state.closed_at);
 
+        var attachments = this.state.attachments.map(function(it) {
+            var ep = mushi.api.root + 'attachments/' + it.uid;
+            return <AttachmentThumbnail endpoint={ep} mimetype={it.mime_type} key={it.uid} />;
+        });
+
         return (
             <article className="mu-component mu-issue-wrapper col-md-12">
                 <div className="panel panel-default">
@@ -155,10 +207,10 @@ var IssueDetail = React.createClass({
                     <div className="panel-body">
                         <div className="container-fluid">
                             <div className="row">
-                                <div className="mu-issue-title col-sm-6">
+                                <div className="mu-issue-content col-sm-6">
                                     <label>Description</label>
                                     <div className="mu-issue-description">
-                                        <span dangerouslySetInnerHTML={{__html: raw_markup}} />
+                                        {description}
                                     </div>
                                 </div>
                                 <div className="mu-issue-meta col-sm-6">
@@ -173,6 +225,9 @@ var IssueDetail = React.createClass({
                                         <dt>Open</dt>         <dd>{open_at}</dd>
                                         <dt>Closed</dt>       <dd>{closed_at}</dd>
                                     </dl>
+                                </div>
+                                <div className="mu-issue-attachments col-sm-12">
+                                    {attachments}
                                 </div>
                             </div>
                         </div>
