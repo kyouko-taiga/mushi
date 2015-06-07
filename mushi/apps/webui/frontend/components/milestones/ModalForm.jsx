@@ -28,6 +28,10 @@ var MilestoneInputMixin = {
         };
     },
 
+    getValue: function() {
+        return this.state.value;
+    },
+
     handleChange: function(e) {
         this.setState({value: e.target.value});
     }
@@ -111,7 +115,6 @@ var MilestoneDueDateInput = React.createClass({
 });
 
 var MilestoneModalForm = React.createClass({
-
     handleSubmit: function(e) {
         e.preventDefault();
 
@@ -121,7 +124,7 @@ var MilestoneModalForm = React.createClass({
 
         for (var input_name in this.refs) {
             var input = this.refs[input_name];
-            data[input_name] = input.state.value;
+            data[input_name] = input.getValue();
 
             // Exit if there are format validation errors.
             is_valid = is_valid && input.validate(data[input_name]);

@@ -226,7 +226,6 @@ var IssueAttachmentsInput = React.createClass({
 });
 
 var IssueModalForm = React.createClass({
-
     handleSubmit: function(e) {
         e.preventDefault();
 

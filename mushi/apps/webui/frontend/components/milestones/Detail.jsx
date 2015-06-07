@@ -59,7 +59,17 @@ var MilestoneDetail = React.createClass({
     },
 
     getInitialState: function() {
-        return {data: []};
+        return {
+            closed_count: null,
+            description: null,
+            due_date: null,
+            name: null,
+            open_count: null,
+            progress: null,
+            slug: null,
+            status: null,
+            tags: []
+        };
     },
 
     componentDidMount: function() {
@@ -148,7 +158,7 @@ var MilestoneDetail = React.createClass({
                                                 className="progress-bar progress-bar-success" role="progressbar"
                                                 style={{width: this.state.progress + '%'}}
                                                 aria-valuenow={this.state.progress} aria-valuemin="0" aria-valuemax="100"
-                                                >
+                                            >
                                                 <span className="sr-only">{this.state.progress}% Complete</span>
                                             </div>
                                         </div>
