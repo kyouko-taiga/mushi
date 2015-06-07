@@ -201,12 +201,16 @@ class Issue(Base, Tagged, Dictionarizable):
         )
     )
 
+    # Note that on SQLite you must turn on support for foreign keys explicitly
+    # or it will just ignore any SQL related to foreign keys. You can achieve
+    # this by letting SQLAlchemy emit a PRAGMA statement for new connections.
+    # See http://goo.gl/OaWb5i for more information.
     attachments = relationship(
         'Attachment',
         secondary=Table(
             'issue_attachments', Base.metadata,
-            Column('issue_uid', ForeignKey('issue.uid')),
-            Column('attachment_uid', ForeignKey('attachment.uid'))
+            Column('issue_uid', ForeignKey('issue.uid', ondelete='CASCADE')),
+            Column('attachment_uid', ForeignKey('attachment.uid', ondelete='CASCADE'))
         )
     )
 
@@ -225,6 +229,17 @@ class Issue(Base, Tagged, Dictionarizable):
     def update(self, data):
         # Update tags.
         self.update_tags(data)
+
+        # Update the optional attachments.
+        if 'attachments' in data:
+            attachments = []
+            for attachment_uid in data.pop('attachments'):
+                try:
+                    q = db_session.query(Attachment).filter(Attachment.uid == attachment_uid)
+                    attachments.append(q.one())
+                except NoResultFound:
+                    raise InvalidArgumentError("No such attachment: '%s'." % attachment_uid)
+            self.attachments = attachments
 
         # Update the author of the issue.
         if 'author' in data:
