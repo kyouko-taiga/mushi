@@ -20,6 +20,7 @@
         "backbone": "~1.2.0",
         "react": "~0.13.3",
         "react-bootstrap": "~0.23.0",
+        "react-dropzone": "~1.2.0",
         "marked": "0.3.2",
         "moment": "~2.10.3"
     },

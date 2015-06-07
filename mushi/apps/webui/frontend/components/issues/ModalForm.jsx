@@ -21,6 +21,8 @@ var Modal = require('react-bootstrap/lib/Modal');
 
 var mushi = require('../../common');
 
+var DropzoneWrapper = require('../DropzoneWrapper');
+
 var IssueInputMixin = {
     getInitialState: function() {
         return {
@@ -28,6 +30,10 @@ var IssueInputMixin = {
             is_valid: (Boolean(this.props.value) || !this.props.required),
             bsStyle: null
         };
+    },
+
+    getValue: function() {
+        return this.state.value;
     },
 
     handleChange: function(e) {
@@ -130,25 +136,26 @@ var IssueDescriptionInput = React.createClass({
 
 var IssueReproducibleInput = React.createClass({
     getInitialState: function() {
-        return {
-            checked: this.props.checked,
-            is_valid: true,
-        };
+        return {value: this.props.value};
     },
 
     handleChange: function(e) {
-        this.setState({checked: e.target.checked});
+        this.setState({value: e.target.checked});
     },
 
     validate: function(value) {
         return true;
     },
 
+    getValue: function() {
+        return this.state.value;
+    },
+
     render: function() {
         return (
             <Input
                 {...this.props} type="checkbox" label="Reproducible"
-                checked={this.state.checked}
+                checked={this.state.value}
                 onChange={this.handleChange}
             />
         );
@@ -199,6 +206,25 @@ var IssueMilestoneInput = React.createClass({
     }
 });
 
+var IssueAttachmentsInput = React.createClass({
+    getValue: function() {
+        return this.refs.dropzone.getValue();
+    },
+
+    validate: function(value) {
+        return true;
+    },
+
+    render: function() {
+        return (
+            <div className="form-group clearfix">
+                <label className="control-label">Attachments</label>
+                <DropzoneWrapper ref="dropzone" value={this.props.value} />
+            </div>
+        );
+    }
+});
+
 var IssueModalForm = React.createClass({
 
     handleSubmit: function(e) {
@@ -210,7 +236,7 @@ var IssueModalForm = React.createClass({
 
         for (var input_name in this.refs) {
             var input = this.refs[input_name];
-            data[input_name] = input.state.value;
+            data[input_name] = input.getValue();
 
             // Exit if there are format validation errors.
             is_valid = is_valid && input.validate(data[input_name]);
@@ -219,10 +245,6 @@ var IssueModalForm = React.createClass({
         if (!is_valid) {
             return;
         }
-
-        // Handle the reproducible input as a special case, since checkboxes
-        // state is stored in `checked` rather than in `value`.
-        data.reproducible = this.refs.reproducible.state.checked;
 
         this.props.onModalSubmit(data);
         this.props.onRequestHide();
@@ -246,6 +268,14 @@ var IssueModalForm = React.createClass({
             );
         }
 
+        if (this.props.attachments) {
+            var attachments_uids = this.props.attachments.map(function(attachment) {
+                return attachment.uid;
+            });
+        } else {
+            var attachments_uids = [];
+        }
+
         return (
             <Modal {...this.props}>
                 <form onSubmit={this.handleSubmit}>
@@ -254,8 +284,9 @@ var IssueModalForm = React.createClass({
                         <IssueLevelInput ref="level" value={this.props.level || 'important'} required />
                         <IssueStatuslInput ref="status" value={this.props.status || 'open'} required />
                         <IssueDescriptionInput ref="description" value={this.props.description} />
-                        <IssueReproducibleInput ref="reproducible" checked={this.props.reproducible} />
+                        <IssueReproducibleInput ref="reproducible" value={this.props.reproducible} />
                         {milestone_input}
+                        <IssueAttachmentsInput ref="attachments" value={attachments_uids} />
                     </div>
                     <div className="modal-footer">
                         <Button onClick={this.props.onRequestHide}>Cancel</Button>

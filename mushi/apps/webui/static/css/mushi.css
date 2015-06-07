@@ -285,7 +285,7 @@ body > .navbar + .container {
     margin-bottom: 20px;
 }
 
-.mu-milestone-wrapper .mu-milestone-description p{
+.mu-milestone-wrapper .mu-milestone-description p {
     text-align: justify;
 }
 
@@ -299,8 +299,80 @@ body > .navbar + .container {
     margin-left: 0;
 }
 
+.mu-thumbnail .mu-preview {
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+    border-radius: 6px;
+}
+
+.mu-thumbnail > .mu-caption {
+    padding: 0 5px;
+    width: 100%;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 12px;
+}
+
 .mu-profile-picture {
     border-radius: 6px;
     width: 70px;
     height: 70px;
+}
+
+.mu-dropzone-wrapper > div {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    width: 128px;
+    height: 128px;
+    margin: 10px;
+}
+
+.mu-dropzone-wrapper .mu-thumbnail > .mu-progress {
+    position: absolute;
+    top: 40%;
+    left: 5%;
+    width: 90%;
+}
+
+.mu-dropzone-wrapper .mu-thumbnail > .mu-status {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    line-height: 128px;
+    font-size: 48px;
+    text-align: center;
+    color: #d9534f;
+    opacity: 0.6;
+}
+
+.mu-dropzone-wrapper .mu-thumbnail > .mu-progress > .progress {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.mu-dropzone-wrapper .mu-thumbnail > .mu-thumbnail-btn {
+    position: absolute;
+    top: -6px;
+    left: -6px;
+}
+
+.mu-dropzone {
+    padding: 10px 5px;
+    width: 100%;
+    height: 100%;
+    border: 3px dashed #ddd;
+    border-radius: 6px;
+    text-align: center;
+    color: #ddd;
+    cursor: pointer;
+}
+
+.mu-dropzone-icon {
+    font-size: 24px;
 }
