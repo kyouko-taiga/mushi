@@ -28,6 +28,7 @@ var marked = require('marked');
 
 var mushi = require('../../common');
 
+var AttachmentGallery = require('../AttachmentGallery');
 var IssueModalForm = require('./ModalForm');
 
 var IssueDeleteModal = React.createClass({
@@ -46,58 +47,6 @@ var IssueDeleteModal = React.createClass({
                 </div>
             </Modal>
         );
-    }
-});
-
-var AttachmentThumbnail = React.createClass({
-    isImage: function() {
-        return (this.props.mime_type || '').split('/')[0] == 'image';
-    },
-
-    show: function(e) {
-        e.preventDefault();
-
-        $.magnificPopup.open({
-            items: {
-                src: this.props.endpoint + '/original'
-            },
-            type: this.isImage() ? 'image' : 'iframe'
-        });
-    },
-
-    render: function() {
-        if (this.isImage()) {
-            var preview_style = {backgroundImage: 'url(' + this.props.endpoint + '/thumbnail)'};
-        } else {
-            var preview_style = null;
-        }
-
-        return (
-            <div className="mu-thumbnail">
-                <a href={this.props.endpoint + '/original'} onClick={this.show}>
-                    <div className="mu-preview" style={preview_style}>
-                        {this.renderPreviewIcon()}
-                    </div>
-                    <div className="mu-caption">
-                        {this.props.name}
-                    </div>
-                </a>
-            </div>
-        );
-    },
-
-    renderPreviewIcon: function() {
-        // Get top-level type and subtype name.
-        var mime_type = this.props.mime_type.split('/');
-
-        // Return the corresponding icon.
-        if (mime_type[0] == 'image') {
-            return null;
-        } else if(mime_type[1] == 'pdf') {
-            return <i className="fa fa-file-pdf-o"></i>;
-        } else {
-            return <i className="fa fa-file-o"></i>;
-        }
     }
 });
 
@@ -207,11 +156,6 @@ var IssueDetail = React.createClass({
             }
         })(this.state.closed_at);
 
-        var attachments = this.state.attachments.map(function(it) {
-            var ep = mushi.api.root + 'attachments/' + it.uid;
-            return <AttachmentThumbnail {...it} endpoint={ep} key={it.uid} />;
-        });
-
         return (
             <article className="mu-component mu-issue-wrapper col-md-12">
                 <div className="panel panel-default">
@@ -254,7 +198,10 @@ var IssueDetail = React.createClass({
                                     </dl>
                                 </div>
                                 <div className="mu-issue-attachments col-sm-12">
-                                    {attachments}
+                                    <AttachmentGallery
+                                        endpoint={mushi.api.root + 'attachments/'}
+                                        attachments={this.state.attachments}
+                                    />
                                 </div>
                             </div>
                         </div>
