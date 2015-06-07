@@ -219,7 +219,7 @@ var IssueAttachmentsInput = React.createClass({
         return (
             <div className="form-group clearfix">
                 <label className="control-label">Attachments</label>
-                <DropzoneWrapper ref="dropzone" value={this.props.value} />
+                <DropzoneWrapper ref="dropzone" thumbnails={this.props.thumbnails} />
             </div>
         );
     }
@@ -267,14 +267,6 @@ var IssueModalForm = React.createClass({
             );
         }
 
-        if (this.props.attachments) {
-            var attachments_uids = this.props.attachments.map(function(attachment) {
-                return attachment.uid;
-            });
-        } else {
-            var attachments_uids = [];
-        }
-
         return (
             <Modal {...this.props}>
                 <form onSubmit={this.handleSubmit}>
@@ -285,7 +277,7 @@ var IssueModalForm = React.createClass({
                         <IssueDescriptionInput ref="description" value={this.props.description} />
                         <IssueReproducibleInput ref="reproducible" value={this.props.reproducible} />
                         {milestone_input}
-                        <IssueAttachmentsInput ref="attachments" value={attachments_uids} />
+                        <IssueAttachmentsInput ref="attachments" thumbnails={this.props.attachments} />
                     </div>
                     <div className="modal-footer">
                         <Button onClick={this.props.onRequestHide}>Cancel</Button>

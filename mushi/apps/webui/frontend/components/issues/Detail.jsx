@@ -50,6 +50,10 @@ var IssueDeleteModal = React.createClass({
 });
 
 var AttachmentThumbnail = React.createClass({
+    isImage: function() {
+        return (this.props.mime_type || '').split('/')[0] == 'image';
+    },
+
     show: function(e) {
         e.preventDefault();
 
@@ -57,20 +61,43 @@ var AttachmentThumbnail = React.createClass({
             items: {
                 src: this.props.endpoint + '/original'
             },
-            type: this.props.mimetype.split('/')[0]
+            type: this.isImage() ? 'image' : 'iframe'
         });
     },
 
     render: function() {
-        var preview_style = {backgroundImage: 'url(' + this.props.endpoint + '/thumbnail)'};
+        if (this.isImage()) {
+            var preview_style = {backgroundImage: 'url(' + this.props.endpoint + '/thumbnail)'};
+        } else {
+            var preview_style = null;
+        }
 
         return (
             <div className="mu-thumbnail">
                 <a href={this.props.endpoint + '/original'} onClick={this.show}>
-                    <div className="mu-preview" style={preview_style} />
+                    <div className="mu-preview" style={preview_style}>
+                        {this.renderPreviewIcon()}
+                    </div>
+                    <div className="mu-caption">
+                        {this.props.name}
+                    </div>
                 </a>
             </div>
         );
+    },
+
+    renderPreviewIcon: function() {
+        // Get top-level type and subtype name.
+        var mime_type = this.props.mime_type.split('/');
+
+        // Return the corresponding icon.
+        if (mime_type[0] == 'image') {
+            return null;
+        } else if(mime_type[1] == 'pdf') {
+            return <i className="fa fa-file-pdf-o"></i>;
+        } else {
+            return <i className="fa fa-file-o"></i>;
+        }
     }
 });
 
@@ -182,7 +209,7 @@ var IssueDetail = React.createClass({
 
         var attachments = this.state.attachments.map(function(it) {
             var ep = mushi.api.root + 'attachments/' + it.uid;
-            return <AttachmentThumbnail endpoint={ep} mimetype={it.mime_type} key={it.uid} />;
+            return <AttachmentThumbnail {...it} endpoint={ep} key={it.uid} />;
         });
 
         return (

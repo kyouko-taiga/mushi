@@ -301,8 +301,11 @@ body > .navbar + .container {
 
 .mu-issue-attachments .mu-thumbnail {
     display: inline-block;
+    vertical-align: top;
+    font-size: 64px;
     width: 128px;
     height: 128px;
+    margin-bottom: 20px;
 }
 
 .mu-thumbnail .mu-preview {
@@ -312,9 +315,20 @@ body > .navbar + .container {
     background-repeat: no-repeat;
     background-size: auto 100%;
     border-radius: 6px;
+
+    /*
+     * Because we don't know the actual height of the preview box, we can't
+     * achieve vertical alignement with CSS only. A solution is to either
+     * override the font-size of this class, or let the parent specify the
+     * font-size as half of its height, so we can align with line-height.
+     */
+
+    text-align: center;
+    line-height: 200%;
+    color: #777;
 }
 
-.mu-thumbnail > .mu-caption {
+.mu-thumbnail .mu-caption {
     padding: 0 5px;
     width: 100%;
     text-align: center;
@@ -330,13 +344,17 @@ body > .navbar + .container {
     height: 70px;
 }
 
-.mu-dropzone-wrapper > div {
+.mu-dropzone-wrapper .mu-thumbnail {
     position: relative;
     display: inline-block;
     vertical-align: top;
     width: 128px;
     height: 128px;
-    margin: 10px;
+    margin: 10px 10px 20px 20px;
+}
+
+.mu-dropzone-wrapper .mu-thumbnail .mu-preview {
+    font-size: 64px;
 }
 
 .mu-dropzone-wrapper .mu-thumbnail > .mu-progress {

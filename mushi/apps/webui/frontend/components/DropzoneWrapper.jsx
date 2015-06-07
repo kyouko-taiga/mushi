@@ -94,12 +94,22 @@ var LocalThumbnail = React.createClass({
         return this.state.uid;
     },
 
+    isImage: function() {
+        return (this.props.file.type || '').split('/')[0] == 'image';
+    },
+
     render: function() {
-        var preview_style = {backgroundImage: 'url(' + this.props.file.preview + ')'};
+        if (this.isImage()) {
+            var preview_style = {backgroundImage: 'url(' + this.props.file.preview + ')'};
+        } else {
+            var preview_style = null;
+        }
 
         return (
             <div className="mu-thumbnail">
-                <div className="mu-preview" style={preview_style}></div>
+                <div className="mu-preview" style={preview_style}>
+                    {this.renderPreviewIcon()}
+                </div>
                 <div className="mu-caption">
                     {this.props.file.name}
                 </div>
@@ -107,6 +117,20 @@ var LocalThumbnail = React.createClass({
                 {this.renderCornerButton()}
             </div>
         );
+    },
+
+    renderPreviewIcon: function() {
+        // Get top-level type and subtype name.
+        var mime_type = this.props.file.type.split('/');
+
+        // Return the corresponding icon.
+        if (mime_type[0] == 'image') {
+            return null;
+        } else if(mime_type[1] == 'pdf') {
+            return <i className="fa fa-file-pdf-o"></i>;
+        } else {
+            return <i className="fa fa-file-o"></i>;
+        }
     },
 
     renderUploadStatus: function() {
@@ -144,6 +168,7 @@ var ServerThumbnail = React.createClass({
     propTypes: {
         uid: React.PropTypes.node.isRequired,
         name: React.PropTypes.string,
+        mime_type: React.PropTypes.string,
         index: React.PropTypes.number,
         onDelete: React.PropTypes.func
     },
@@ -156,13 +181,23 @@ var ServerThumbnail = React.createClass({
         return this.props.uid;
     },
 
+    isImage: function() {
+        return (this.props.mime_type || '').split('/')[0] == 'image';
+    },
+
     render: function() {
-        var url = mushi.api.root + 'attachments/' + this.props.uid + '/thumbnail';
-        var preview_style = {backgroundImage: 'url(' + url + ')'};
+        if (this.isImage()) {
+            var url = mushi.api.root + 'attachments/' + this.props.uid + '/thumbnail';
+            var preview_style = {backgroundImage: 'url(' + url + ')'};
+        } else {
+            var preview_style = null;
+        }
 
         return (
             <div className="mu-thumbnail">
-                <div className="mu-preview" style={preview_style}></div>
+                <div className="mu-preview" style={preview_style}>
+                    {this.renderPreviewIcon()}
+                </div>
                 <div className="mu-caption">
                     {this.props.name}
                 </div>
@@ -173,19 +208,31 @@ var ServerThumbnail = React.createClass({
                 </div>
             </div>
         );
+    },
+
+    renderPreviewIcon: function() {
+        // Get top-level type and subtype name.
+        var mime_type = (this.props.mime_type || '').split('/');
+
+        // Return the corresponding icon.
+        if (mime_type[0] == 'image') {
+            return null;
+        } else if(mime_type[1] == 'pdf') {
+            return <i className="fa fa-file-pdf-o"></i>;
+        } else {
+            return <i className="fa fa-file-o"></i>;
+        }
     }
 });
 
 var DropzoneWrapper = React.createClass({
     propTypes: {
-        value: React.PropTypes.array
+        thumbnails: React.PropTypes.array
     },
 
     getInitialState: function() {
          return {
-            thumbnails: (this.props.value || []).map(function(uid) {
-                return {uid: uid, file: null};
-            })
+             thumbnails: (this.props.thumbnails || [])
         }
     },
 
@@ -224,7 +271,7 @@ var DropzoneWrapper = React.createClass({
             } else {
                 return (
                     <ServerThumbnail
-                        uid={thumb.uid} name={thumb.name}
+                        {...thumb}
                         index={index} ref={'thumb-' + index} key={index}
                         onDelete={this.handleThumbailDelete}
                     />
