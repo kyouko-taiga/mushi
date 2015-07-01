@@ -137,7 +137,14 @@ def list_comments(auth_token, uid):
         abort(404)
 
     count_only = ('count' in request.args) and (request.args['count'] in ('', '1', 'true'))
-    query = make_comment_list_query(query_base=issue.comments, paged=(not count_only))
+
+    rv = None or db_session.query(Comment)
+
+    limit = request.args.get('limit', 20)
+    offset = request.args.get('offset', 0)
+    rv = rv.order_by(Comment.created_at.desc()).limit(limit).offset(offset)
+
+    query = rv
 
     if count_only:
         return jsonify({'count': query.count()})
