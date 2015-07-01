@@ -292,3 +292,23 @@ class Attachment(Base, Dictionarizable):
 
     def __repr__(self):
         return '<Attachment %i>' % self.uid
+
+class Comment (Base, Tagged, Dictionarizable):
+
+    _dictionarizable_attrs = (
+        'uid', 'description', 'issues', 'author')
+
+    uid = Column(Integer, primary_key=True)
+    description = Column(String)
+
+    author_email = Column(String, ForeignKey('user.email'))
+    author = relationship('User', backref=backref('comment', lazy='dynamic'))
+
+    issue_uid = Column(String, ForeignKey('issue.uid'))
+    issue = relationship('Issue', backref=backref('comment', lazy='dynamic'))
+
+    def __str__(self):
+        return 'Issue #%i' % self.uid
+
+    def __repr__(self):
+        return '<Issue %i>' % self.uid
