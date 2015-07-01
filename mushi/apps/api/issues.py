@@ -20,7 +20,7 @@ from werkzeug.exceptions import BadRequest
 
 from mushi.core.auth import require_auth_token
 from mushi.core.db import db_session
-from mushi.core.db.models import Issue
+from mushi.core.db.models import Issue, Comment
 from mushi.core.utils.http import jsonify_list
 from mushi.core.utils.time import utcnow
 
@@ -126,3 +126,21 @@ def delete_issue(auth_token, uid):
     db_session.commit()
 
     return '', 204
+
+
+@bp.route('/issues/<uid>/comments/')
+@require_auth_token
+def list_comments(auth_token, uid):
+    try:
+        issue = db_session.query(Issue).filter(Issue.uid == uid).one()
+    except NoResultFound:
+        abort(404)
+
+    count_only = ('count' in request.args) and (request.args['count'] in ('', '1', 'true'))
+    query = make_comment_list_query(query_base=issue.comments, paged=(not count_only))
+
+    if count_only:
+        return jsonify({'count': query.count()})
+    else:
+        rv = [m.to_dict(max_depth=2) for m in query]
+        return jsonify_list(rv)
