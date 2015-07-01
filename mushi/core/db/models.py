@@ -292,3 +292,80 @@ class Attachment(Base, Dictionarizable):
 
     def __repr__(self):
         return '<Attachment %i>' % self.uid
+
+
+class Comment (Base, Tagged, Dictionarizable):
+
+    _dictionarizable_attrs = (
+        'uid', 'content', 'issue', 'author', 'created_at', 'updated_at', 'attachments')
+
+    uid = Column(Integer, primary_key=True)
+    content = Column(String)
+    created_at = Column(UtcDateTime, nullable=False, default=utcnow)
+    updated_at = Column(UtcDateTime, default=None)
+
+    author_email = Column(String, ForeignKey('user.email'))
+    author = relationship('User', backref=backref('comments', lazy='dynamic'))
+
+    issue_uid = Column(String, ForeignKey('issue.uid'))
+    issue = relationship('Issue', backref=backref('comments', lazy='dynamic'))
+
+    attachments = relationship(
+        'Attachment',
+        secondary=Table(
+            'comment_attachments', Base.metadata,
+            Column('comment_uid', ForeignKey('comment.uid', ondelete='CASCADE')),
+            Column('attachment_uid', ForeignKey('attachment.uid', ondelete='CASCADE'))
+        )
+    )
+
+    def update(self, data):
+        # Update tag
+        self.update_tags(data)
+
+        # Update the optional attachments.
+        if 'attachments' in data:
+            attachments = []
+            for attachment_uid in data.pop('attachments'):
+                try:
+                    q = db_session.query(Attachment).filter(Attachment.uid == attachment_uid)
+                    attachments.append(q.one())
+                except NoResultFound:
+                    raise InvalidArgumentError("No such attachment: '%s'." % attachment_uid)
+            self.attachments = attachments
+
+        # Update the author of the issue.
+        if 'author' in data:
+            if data['author']:
+                author_email = data.pop('author')
+                try:
+                    self.author = db_session.query(User).filter(
+                        User.email == author_email
+                    ).one()
+                except NoResultFound:
+                    raise InvalidArgumentError("No such user: '%s'." % author_email)
+            elif self.author:
+                self.author = None
+
+        # Update the milestone the issue is to be assigned to.
+        if 'issue' in data:
+            if data['issue']:
+                issue_uid = data.pop('issue')
+                try:
+                    self.issue = db_session.query(Issue).filter(
+                        Issue.uid == issue_uid
+                    ).one()
+                except NoResultFound:
+                    raise InvalidArgumentError("No such issue: '%s'." % issue_uid)
+            elif self.issue:
+                self.issue.issues.remove(self)
+                del data['issue']
+
+        # Update the remaining attributes.
+        super(Comment, self).update(data)
+
+    def __str__(self):
+        return '%s' % self.content
+
+    def __repr__(self):
+        return '<Comment %i>' % self.uid
