@@ -30,7 +30,6 @@ var Router = Backbone.Router.extend({
         'issues/:uid'      : 'issue_detail',
         'settings'         : 'settings',
         'logout'           : 'logout'
-        'comments'         : 'comments'
     },
     dashboard: function() {
         this.current = 'dashboard';
@@ -59,10 +58,7 @@ var Router = Backbone.Router.extend({
                 window.location = '/login';
             }
         });
-    },
-    comments: function() {
-        this.current = 'comments';
-    },
+    }
 });
 
 // Create the Backbone router.
