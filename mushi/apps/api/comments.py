@@ -23,6 +23,8 @@ from mushi.core.db.models import Issue, Comment
 from mushi.core.utils.http import jsonify_list
 from mushi.core.utils.time import utcnow
 
+from .exc import ApiError
+
 bp = Blueprint('comments', __name__)
 
 
