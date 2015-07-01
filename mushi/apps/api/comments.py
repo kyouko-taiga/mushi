@@ -27,8 +27,18 @@ bp = Blueprint('comments', __name__)
 @bp.route('/comments/')
 @require_auth_token
 def list_comments(auth_token):
+    count_only = ('count' in request.args) and (request.args['count'] in ('', '1', 'true'))
 
-    return jsonify(comment.to_dict(max_depth=2))
+    if count_only:
+        return jsonify({'count': query.count()})
+    else:
+        limit = request.args.get('limit', 20)
+        offset = request.args.get('offset', 0)
+        query = query.order_by(Milestone.due_date).limit(limit).offset(offset)
+
+    rv = [m.to_dict(max_depth=2) for m in query]
+
+    return jsonify_list(rv)
 
 
 @bp.route('/comments/<uid>')
