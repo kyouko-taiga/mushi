@@ -12,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from flask import Blueprint, render_template, abort
+from flask import Blueprint, render_template, abort, request, jsonify
 from jinja2 import TemplateNotFound
+
+from werkzeug.exceptions import BadRequest
 
 from mushi.core.auth import require_auth_token
 from mushi.core.db import db_session
@@ -29,12 +31,14 @@ bp = Blueprint('comments', __name__)
 def list_comments(auth_token):
     count_only = ('count' in request.args) and (request.args['count'] in ('', '1', 'true'))
 
+    query = db_session.query(Comment)
+
     if count_only:
         return jsonify({'count': query.count()})
     else:
         limit = request.args.get('limit', 20)
         offset = request.args.get('offset', 0)
-        query = query.order_by(Milestone.due_date).limit(limit).offset(offset)
+        query = query.order_by(Comment.created_at).limit(limit).offset(offset)
 
     rv = [m.to_dict(max_depth=2) for m in query]
 
